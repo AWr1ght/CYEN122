@@ -12,8 +12,8 @@ package entity;
  */
 public class Pack extends Entity{
 
-    public Pack(String[] filenames) {
-        super(true, true, false, filenames, Entity.AI.CHASE);
+    public Pack(float x, float y, String[] filenames) {
+        super(x, y, true, true, false, filenames, Entity.AI.CHASE);
     }
     
 }

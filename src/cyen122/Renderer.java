@@ -22,18 +22,22 @@ public class Renderer {
         glBegin(GL_QUADS);
             glColor3f(0, 1, 1);
 //            glTexCoord2f(0, 0);
-            glVertex2i(0, -32);
+            glVertex2i(toPixels(e.getX(), "x"),
+                       toPixels(e.getY()+1, "y"));
 //            glTexCoord2f(0, 1);
-            glVertex2i(0, 0);      // TODO: Replace 32 with texture height
+            glVertex2i(toPixels(e.getX(), "x"),
+                       toPixels(e.getY(), "y"));      // TODO: Replace 32 with texture height
 //            glTexCoord2f(1, 1);
-            glVertex2i(32, 0);
+            glVertex2i(toPixels(e.getX()+1, "x"),
+                       toPixels(e.getY(), "y"));
 //            glTexCoord2f(1, 0);
-            glVertex2i(32, -32);
+            glVertex2i(toPixels(e.getX()+1, "x"),
+                       toPixels(e.getY()+1, "y"));
         glEnd();
     }
     
     /**
-     * 
+     * Converts metric World/Entity space to Pixelspace
      * @param t location in Cartesian tilespace
      * @return 
      */

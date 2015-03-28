@@ -12,8 +12,8 @@ package entity;
  */
 public class Hurdle extends Entity{
 
-    public Hurdle(String[] filenames) {
-        super(true, false, true, filenames, Entity.AI.STATIC);
+    public Hurdle(float x, float y, String[] filenames) {
+        super(x, y, true, false, true, filenames, Entity.AI.STATIC);
     }
     
 }

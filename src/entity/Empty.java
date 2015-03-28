@@ -12,8 +12,8 @@ package entity;
  */
 public class Empty extends Entity{
 
-    public Empty() {
-        super(false, false, false, new String[]{" "}, Entity.AI.STATIC);
+    public Empty(float x, float y) {
+        super(x, y, false, false, false, new String[]{" "}, Entity.AI.STATIC);
     }
     
 }

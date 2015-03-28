@@ -31,7 +31,7 @@ public class Entity {
     
     // array of sprites for different animation states
     // TODO: Implement entity.Texture for sprite variation
-    public Entity(boolean solid, boolean dmg, boolean slow,
+    public Entity(float x0, float y0, boolean solid, boolean dmg, boolean slow,
                   String[] filenames, AI ai){
         isSolid = solid;
         isDamaging = dmg;
@@ -57,12 +57,10 @@ public class Entity {
     }
     
     public void setX(float x){
-        world.set((int) this.x, (int) this.y, new Empty());
         this.x = x;
     }
     
     public void setY(float y){
-        world.set((int) this.x, (int) this.y, new Empty());
         this.y = y;
     }
     

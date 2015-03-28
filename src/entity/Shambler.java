@@ -13,7 +13,7 @@ package entity;
 public class Shambler extends Entity{
     
     
-    public Shambler(String[] filenames) {
-        super(true, true, true, filenames, Entity.AI.SHAMBLE);
+    public Shambler(float x, float y, String[] filenames) {
+        super(x, y, true, true, true, filenames, Entity.AI.SHAMBLE);
     }
 }

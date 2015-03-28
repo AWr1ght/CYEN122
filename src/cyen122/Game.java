@@ -5,6 +5,7 @@
  */
 package cyen122;
 
+import entity.Entity;
 import entity.Player;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,14 +27,14 @@ public class Game {
     public static Keybinds in = new Keybinds();
     public static Viewport cam;
     public static World world = new World();
-    public static Player player = new Player(new String[]{"Block"}); 
+    public static Player player = new Player(5, 3, new String[]{"Block"}); 
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         initDisplay();
-        world.set(5, 3, player);
+        world.add(player);
         gameLoop();
         cleanUp();
     }
@@ -54,18 +55,9 @@ public class Game {
     }
     
     public static void renderWorld(){
-        glPushMatrix();
-        for(int i = 0; i < world.getMap().length; i++){
-            glTranslatef(32, 0, 0);
-            for(int j = 0; j < world.getMap()[0].length; j++){
-                glTranslatef(0, 32, 0);
-//                if(world.getMap()[i][j] != null){     // i.e. If The terrain is occupied
-                    Renderer.render(world.getMap()[i][j]);
-//                }
-            }
+        for(Entity e : world.getEntities()){
+            Renderer.render(e);
         }
-        glPopMatrix();
-        glLoadIdentity();
     }
     
     public static void gameLoop(){

@@ -13,7 +13,7 @@ package entity;
 public class Player extends Entity{
     int weapon;     // TODO: define lookup table for weapons
     
-    public Player(String[] filenames) {
-        super(true, false, false, filenames, AI.STATIC);
+    public Player(float x, float y, String[] filenames) {
+        super(x, y, true, false, false, filenames, AI.STATIC);
     }
 }
