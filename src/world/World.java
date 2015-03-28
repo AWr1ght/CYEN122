@@ -23,12 +23,6 @@ public class World {
     
     public World(String filename){
         entities = new ArrayList();
-//        map = new Entity[Width of image*32][Height of image*32];
-//        for(int i = 0; i < 30; i++){
-//            for(int j = 0; j < 30; j++){
-//                map[i][j] = new Empty();
-//            }
-//        }
         
         try{
             BufferedImage level = ImageIO.read(new File("res/levels/" + filename + ".png"));
