@@ -8,20 +8,20 @@ package cyen122;
 
 import org.lwjgl.opengl.Display;
 import static org.lwjgl.opengl.GL11.*;
-import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector2f;
 
 /**
- * Handles User visual field
+ * Handles User point of view
  * 
  * @author Allister Wright
  */
 public class Viewport {
-//    public static Vector3f position;
+    public static Vector2f position;
     private float fov, aspect;
     private static Keybinds in = new Keybinds();
     
     public Viewport(float fov, float aspect){
-//        position = new Vector3f(-1, 1, 1);
+        position = new Vector2f(1, 1);
         
         this.fov = fov;
         this.aspect = aspect;
@@ -39,7 +39,6 @@ public class Viewport {
         
 //        glEnable(GL_DEPTH_TEST);
         glEnable(GL_TEXTURE_2D);
-//        glEnable(GL_FOG);
         glEnable(GL_CULL_FACE);
         
         glCullFace(GL_BACK);
@@ -51,7 +50,7 @@ public class Viewport {
      * @param y 
      */
     public static void moveTo(float x, float y){
-//        position.y = y;
-//        position.x = x;
+        position.y = y;
+        position.x = x;
     }
 }

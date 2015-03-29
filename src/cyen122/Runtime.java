@@ -7,19 +7,37 @@
 package cyen122;
 
 import entity.Entity;
+import entity.Player;
 import java.util.ArrayList;
+import org.lwjgl.opengl.Display;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.glClear;
+import world.World;
 
 /**
- * Handles game logic and logic-tick rate
+ * Handles game logic and User Input
  * @author Allister
  */
 public class Runtime {
-    private static ArrayList<Entity> entities = Game.world.getEntities();
+    private Keybinds in = new Keybinds();
+    private World world;
+    private Player player = new Player(5, 3, new String[]{"Block"}); 
+    private ArrayList<Entity> entities;
+    
+    /**
+     * Created on World loading
+     */
+    public Runtime(){
+        world = new World();
+        world.add(player);
+        entities = world.getEntities();
+    }
     
     /**
      * Does game ticks on non-static objects (i.e. Player, Shamblers, and Pack)
      */
-    public static void tick(){
+    public void tick(){
+        tickInput();
         
         // As long as the player is spawned before other entities, this for order should work best
         for(int i = 0; i < entities.size(); i++){
@@ -40,5 +58,36 @@ public class Runtime {
                     System.out.println("AI not Enabled");
             }
         }
+        
+        renderWorld();
+    }
+    
+    /**
+     * Checks user input each game tick
+     */
+    private void tickInput(){
+        if(in.getUp())
+            player.setY(player.getY() + .2f);
+        if(in.getDown())
+            player.setY(player.getY() - .2f);
+        if(in.getLeft())
+            player.setX(player.getX() - .2f);
+        if(in.getRight())
+            player.setX(player.getX() + .2f);
+        if(in.getJump())
+            player.setY(player.getY() + 2);
+        if(in.getEsc());
+    }
+    
+    /**
+     * Renders the world entities each game tick
+     */
+    public void renderWorld(){
+        glClear(GL_COLOR_BUFFER_BIT);
+        for(Entity e : world.getEntities()){
+            Renderer.render(e);
+        }
+        Display.update();
+        Display.sync(144);
     }
 }

@@ -5,41 +5,38 @@
  */
 package cyen122;
 
-import entity.Entity;
-import entity.Player;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import static org.lwjgl.opengl.GL11.*;
-import world.World;
 
 /**
- * Runs Game States and User calls
+ * Handles Game States and User calls
  *
  * @author Allister Wright
  */
 public class Game {
     public static final boolean DEBUG = true;
     
-    protected static Keybinds in = new Keybinds();
+    private static Keybinds in = new Keybinds();
     protected static Viewport cam;
-    protected static World world;
-    protected static Player player = new Player(5, 3, new String[]{"Block"}); 
+    protected static Runtime run;
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         initDisplay();
-        world = new World();
-        world.add(player);
+        initRuntime();
         gameLoop();
         cleanUp();
     }
-
+    
+    /**
+     * Called on Game startup
+     */
     public static void initDisplay() {
         try {
             Display.setDisplayMode(new DisplayMode(1024, 768));
@@ -55,43 +52,34 @@ public class Game {
         }
     }
     
-    public static void renderWorld(){
-        for(Entity e : world.getEntities()){
-            Renderer.render(e);
-        }
-    }
-    
+    /**
+     * Handles game states & console debug info
+     */
     public static void gameLoop(){
         while (!Display.isCloseRequested()){        // While not forced to closed
-            glClear(GL_COLOR_BUFFER_BIT);
-            renderWorld();
+            run.tick();
             
             if(DEBUG){
                 if(in.getAttack()){
                     System.out.println("X Pixel: " + Mouse.getX());
-                    System.out.println(" X Tile: " + (int) Mouse.getX()/32);
-                    System.out.println("  Y Pixel: " + Mouse.getY());
-                    System.out.println("   Y Tile: " + (int) Mouse.getY()/32);
+                    System.out.println("#X Tile: " + (int) Mouse.getX()/32);
+                    System.out.println("   Y Pixel: " + Mouse.getY());
+                    System.out.println("   #Y Tile: " + (int) Mouse.getY()/32);
                 }
             }
-            
-            if(in.getUp())
-                player.setY(player.getY() + .2f);
-            if(in.getDown())
-                player.setY(player.getY() - .2f);
-            if(in.getLeft())
-                player.setX(player.getX() - .2f);
-            if(in.getRight())
-                player.setX(player.getX() + .2f);
-            if(in.getJump())
-                player.setY(player.getY() + 2);
-            if(in.getEsc());
-            
-            Display.update();
-            Display.sync(144);
         }
     }
     
+    /**
+     * Called on world startup
+     */
+    public static void initRuntime(){
+        run = new Runtime();
+    }
+    
+    /**
+     * Kills the Display on game exit
+     */
     public static void cleanUp(){
         Display.destroy();
     }

@@ -22,8 +22,8 @@ public class Entity {
     
     private float x, y, w, h;
     private final boolean isSolid, isDamaging, isSlowing, hasGravity;
-    private String sprite;  // texture filename
-    private Texture texture;
+    private String[] sprite;    // animation filename
+    private Texture texture;    // static texture filename
     private AI ai;
     
     // array of sprites for different animation states
@@ -31,19 +31,23 @@ public class Entity {
     public Entity(float x0, float y0, 
                   boolean solid, boolean dmg, boolean slow, boolean grav,
                   String[] filenames, AI ai){
+        loadTexture(filenames[0]);
         x = x0;
         y = y0;
+        w = texture.getWidth();
+        h = texture.getHeight();
         isSolid = solid;
         isDamaging = dmg;
         isSlowing = slow;
         hasGravity = grav;
-        sprite = filenames[0];
+        sprite = filenames;
         this.ai = ai;
     }
     
     public Entity(float x0, float y0, float width, float height, 
                   boolean solid, boolean dmg, boolean slow, boolean grav,
                   String[] filenames, AI ai){
+        loadTexture(filenames[0]);
         x = x0;
         y = y0;
         w = width;
@@ -52,11 +56,11 @@ public class Entity {
         isDamaging = dmg;
         isSlowing = slow;
         hasGravity = grav;
-        sprite = filenames[0];
+        sprite = filenames;
         this.ai = ai;
     }
     
-    
+    // Getters and Setters
     public float getX(){
         return x;
     }
@@ -105,7 +109,6 @@ public class Entity {
         this.ai = ai;
     }
     
-    
     /**
      * 
      * @param e the other Entity to check collision
@@ -130,18 +133,16 @@ public class Entity {
         }
     }
     
-    
+    /**
+     * Sets the current texture to display
+     * @param t the filename of the texture to load
+     */
     private void loadTexture(String t){
-        sprite = t;
         try{
             // Source: https://www.youtube.com/watch?v=naE3nbreSUo
-            if(this instanceof Terrain){
-                texture = TextureLoader.getTexture("PNG", 
-                                        new FileInputStream(new File("res/sprites/static/" + sprite + ".png")));
-            } else {
-                texture = TextureLoader.getTexture("PNG", 
-                                        new FileInputStream(new File("res/sprites/static/" + sprite + ".png")));
-            }
+            texture = TextureLoader.getTexture("PNG", 
+                                    new FileInputStream(new File(
+                                        "res/sprites/static/" + sprite + ".png")));
         } catch(FileNotFoundException e){
             e.printStackTrace();
         } catch(IOException e){

@@ -21,6 +21,10 @@ public class World {
     private String filename;    // Every level will have a map containing the level data
     private ArrayList<Entity> entities;
     
+    /**
+     * Loads the world based on an image
+     * @param filename the world image
+     */
     public World(String filename){
         entities = new ArrayList();
         
@@ -35,6 +39,7 @@ public class World {
     
     /**
      * FOR TESTING PURPOSES ONLY
+     * Loads a generic world with a floor
      */
     public World(){
         entities = new ArrayList();
@@ -43,10 +48,18 @@ public class World {
         }
     }
     
+    /**
+     * 
+     * @return the list of entities in a world
+     */
     public ArrayList<Entity> getEntities(){
         return entities;
     }
     
+    /**
+     * Adds an entity to the world
+     * @param e the Entity to add
+     */
     public void add(Entity e){
         entities.add(e);
     }

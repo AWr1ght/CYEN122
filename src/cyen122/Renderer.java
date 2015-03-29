@@ -17,6 +17,10 @@ import static org.lwjgl.opengl.GL11.*;
 public class Renderer {
     
     
+    /**
+     * Renders a single entity
+     * @param e the Entity to render
+     */
     public static void render(Entity e){
 //        e.getTexture().bind();
         glBegin(GL_QUADS);
@@ -39,7 +43,7 @@ public class Renderer {
     /**
      * Converts metric World/Entity space to Pixelspace
      * @param t location in Cartesian tilespace
-     * @return 
+     * @return pixel location of the object
      */
     private static int toPixels(float t, String dir){
         if(dir.equals("x"))
