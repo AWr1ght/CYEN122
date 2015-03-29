@@ -11,7 +11,7 @@ import org.lwjgl.opengl.Display;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
- *
+ * Handles displaying the world and game scene
  * @author Allister
  */
 public class Renderer {
@@ -43,7 +43,7 @@ public class Renderer {
      */
     private static int toPixels(float t, String dir){
         if(dir.equals("x"))
-            return (int) t*32;
+            return (int) (t*32);
         if(dir.equals("y"))
             return (int) (Display.getHeight()-(t*32));
         return 0;

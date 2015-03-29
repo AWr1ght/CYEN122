@@ -17,23 +17,24 @@ import static org.lwjgl.opengl.GL11.*;
 import world.World;
 
 /**
- * Runs Game logic
+ * Runs Game States and User calls
  *
  * @author Allister Wright
  */
 public class Game {
     public static final boolean DEBUG = true;
     
-    public static Keybinds in = new Keybinds();
-    public static Viewport cam;
-    public static World world = new World();
-    public static Player player = new Player(5, 3, new String[]{"Block"}); 
+    protected static Keybinds in = new Keybinds();
+    protected static Viewport cam;
+    protected static World world;
+    protected static Player player = new Player(5, 3, new String[]{"Block"}); 
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         initDisplay();
+        world = new World();
         world.add(player);
         gameLoop();
         cleanUp();

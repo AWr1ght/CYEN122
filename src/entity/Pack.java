@@ -13,7 +13,7 @@ package entity;
 public class Pack extends Entity{
 
     public Pack(float x, float y, String[] filenames) {
-        super(x, y, true, true, false, filenames, Entity.AI.CHASE);
+        super(x, y, true, true, false, true, filenames, Entity.AI.CHASE);
     }
     
 }
