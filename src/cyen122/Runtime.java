@@ -21,22 +21,26 @@ import world.World;
 public class Runtime {
     private Keybinds in = new Keybinds();
     private World world;
-    private Player player = new Player(5, 3, new String[]{"Block"}); 
+    private Player player;
     private ArrayList<Entity> entities;
     
-    /**
-     * Created on World loading
-     */
+    public Runtime(World w, Player p){
+        world = w;
+        player = p;
+        world.add(player);
+    }
+    
     public Runtime(){
         world = new World();
+        player = new Player(5, 3, new String[]{""});
         world.add(player);
-        entities = world.getEntities();
     }
     
     /**
      * Does game ticks on non-static objects (i.e. Player, Shamblers, and Pack)
      */
     public void tick(){
+        entities = world.getEntities();
         tickInput();
         
         // As long as the player is spawned before other entities, this for order should work best
