@@ -41,11 +41,25 @@ public class Runtime {
      */
     public void tick(){
         entities = world.getEntities();
+        trim();
         tickInput();
         
         // As long as the player is spawned before other entities, this for order should work best
         for(int i = 0; i < entities.size(); i++){
-            switch(entities.get(0).getAI()){
+            Entity curr = entities.get(i);
+            
+            // Make the current entitiy fall
+            curr.setY(curr.getY() + curr.getVY());
+            if(curr.hasGravity())
+                curr.setVY(curr.getVY() - .01f);
+            
+            // Make the current entity collide
+            if(curr.isColliding(entities) == 1){
+                curr.setVY(0);
+                curr.setY((int) (curr.getY()+1));
+            }
+            
+            switch(curr.getAI()){
                 case PLAYER:    // The player
                     
                     break;
@@ -70,9 +84,11 @@ public class Runtime {
      * Checks user input each game tick
      */
     private void tickInput(){
-        if(in.getUp())
-            player.setY(player.getY() + .2f);
+        if(in.getUp()){
+            player.jump();
+        } 
         if(in.getDown())
+            // TODO: Replace with sliding. . . somewhen
             player.setY(player.getY() - .2f);
         if(in.getLeft())
             player.setX(player.getX() - .2f);
@@ -88,10 +104,30 @@ public class Runtime {
      */
     public void renderWorld(){
         glClear(GL_COLOR_BUFFER_BIT);
-        for(Entity e : world.getEntities()){
+        for(Entity e : entities){
             Renderer.render(e);
         }
         Display.update();
         Display.sync(144);
+    }
+    
+    /**
+     * Removes entities with invalid location data
+     */
+    private void trim(){
+        for(int trimIndex = 0; 
+                  trimIndex < world.getEntities().size(); 
+                    trimIndex++){
+            if(world.getEntity(trimIndex).getX() < 0)
+                world.kill(trimIndex);
+            if(world.getEntity(trimIndex).getX() > world.getWidth())
+                world.kill(trimIndex);
+            if(world.getEntity(trimIndex).getY() < 0)
+                world.kill(trimIndex);
+            if(world.getEntity(trimIndex).getY() > world.getHeight())
+                world.kill(trimIndex);
+        }
+        entities = world.getEntities();
+        player = (Player) entities.get(entities.size()-1);
     }
 }

@@ -39,7 +39,7 @@ public class Game {
      */
     public static void initDisplay() {
         try {
-            Display.setDisplayMode(new DisplayMode(1024, 768));
+            Display.setDisplayMode(new DisplayMode(640, 480));
             Display.setTitle("666");
             Display.create();
             
