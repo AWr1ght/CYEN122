@@ -9,6 +9,7 @@ package cyen122;
 import entity.Entity;
 import org.lwjgl.opengl.Display;
 import static org.lwjgl.opengl.GL11.*;
+import org.newdawn.slick.opengl.Texture;
 
 /**
  * Handles displaying the world and game scene
@@ -16,28 +17,28 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class Renderer {
     
-    
     /**
      * Renders a single entity
      * @param e the Entity to render
      */
     public static void render(Entity e){
-//        e.getTexture().bind();
+        Texture t = e.getTexture();
+        t.bind();
         glBegin(GL_QUADS);
-            glColor3f(0, 1, 1);
-//            glTexCoord2f(0, 0);
+            glTexCoord2f(0, 0);
             glVertex2i(toPixels(e.getX(), "x"),
-                       toPixels(e.getY()+1, "y"));
-//            glTexCoord2f(0, 1);
+                       toPixels(e.getY()+e.getHeight(), "y"));
+            glTexCoord2f(0, 1);
             glVertex2i(toPixels(e.getX(), "x"),
-                       toPixels(e.getY(), "y"));      // TODO: Replace 32 with texture height
-//            glTexCoord2f(1, 1);
-            glVertex2i(toPixels(e.getX()+1, "x"),
                        toPixels(e.getY(), "y"));
-//            glTexCoord2f(1, 0);
-            glVertex2i(toPixels(e.getX()+1, "x"),
-                       toPixels(e.getY()+1, "y"));
+            glTexCoord2f(1, 1);
+            glVertex2i(toPixels(e.getX()+e.getWidth(), "x"),
+                       toPixels(e.getY(), "y"));
+            glTexCoord2f(1, 0);
+            glVertex2i(toPixels(e.getX()+e.getWidth(), "x"),
+                       toPixels(e.getY()+e.getHeight(), "y"));
         glEnd();
+        t.release();
     }
     
     /**

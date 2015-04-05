@@ -11,6 +11,8 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glEnable;
 
 /**
  * Handles Game States and User calls
@@ -39,9 +41,10 @@ public class Game {
      */
     public static void initDisplay() {
         try {
-            Display.setDisplayMode(new DisplayMode(640, 480));
-            Display.setTitle("666");
+            Display.setDisplayMode(new DisplayMode(960, 720));
+            Display.setTitle("Seal Team 6");
             Display.create();
+            glEnable(GL_TEXTURE_2D);
             
             Mouse.create(); 
             Mouse.setCursorPosition(Display.getWidth()/2, Display.getHeight()/2);

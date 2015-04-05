@@ -20,7 +20,7 @@ import world.World;
  */
 public class Runtime {
     private Keybinds in = new Keybinds();
-    private World world;
+    private final World world;
     private Player player;
     private ArrayList<Entity> entities;
     
@@ -32,7 +32,7 @@ public class Runtime {
     
     public Runtime(){
         world = new World();
-        player = new Player(5, 3, new String[]{""});
+        player = new Player(5, 3, new String[]{"Slope"});
         world.add(player);
     }
     
@@ -44,20 +44,29 @@ public class Runtime {
         trim();
         tickInput();
         
-        // As long as the player is spawned before other entities, this for order should work best
-        for(int i = 0; i < entities.size(); i++){
-            Entity curr = entities.get(i);
+        for (Entity curr : entities) {
+            // Make the current entity collide iff the entity shouldn't move
+            if(curr.getAI() != Entity.AI.STATIC){
+                for(Entity e : entities){
+                    if(curr != e){
+                        if(curr.isColliding(e) == 1 && e.isSolid()){
+                            curr.setVY(0);
+                            curr.setY((int) curr.getY() + 1);
+                        }
+                        /*
+                        *   TODO: implement more stuff
+                        *   .
+                        *   .
+                        *   .
+                        */
+                    }
+                }
+            }
             
             // Make the current entitiy fall
             curr.setY(curr.getY() + curr.getVY());
             if(curr.hasGravity())
                 curr.setVY(curr.getVY() - .01f);
-            
-            // Make the current entity collide
-            if(curr.isColliding(entities) == 1){
-                curr.setVY(0);
-                curr.setY((int) (curr.getY()+1));
-            }
             
             switch(curr.getAI()){
                 case PLAYER:    // The player
@@ -76,7 +85,6 @@ public class Runtime {
                     System.out.println("AI not Enabled");
             }
         }
-        
         renderWorld();
     }
     
@@ -128,6 +136,8 @@ public class Runtime {
                 world.kill(trimIndex);
         }
         entities = world.getEntities();
+        
+        // enabled respawning for testing purposes
         player = (Player) entities.get(entities.size()-1);
     }
 }

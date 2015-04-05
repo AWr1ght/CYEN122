@@ -47,7 +47,7 @@ public class World {
         entities = new ArrayList();
         locations = new Entity[30][10];
         for(int i = 0; i < 30; i++){
-            add(new Terrain(i, 2, new String[]{"Block"}));
+            add(new Terrain(i, 2));
         }
     }
     
@@ -130,7 +130,7 @@ public class World {
         System.out.println("Killing entity" + entityIndex);
         // Respawn the player if it gets killed
         if(entities.get(entityIndex) instanceof Player)
-            add(new Player(5, 3, new String[]{""}));
+            add(new Player(5, 3, new String[]{"Slope"}));
         entities.remove(entityIndex);
     }
 }

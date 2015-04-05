@@ -12,8 +12,8 @@ package entity;
  */
 public class Terrain extends Entity{
 
-    public Terrain(float x, float y, String[] filenames) {
-        super(x, y, 1, 1, true, false, false, false, filenames, Entity.AI.STATIC);
+    public Terrain(float x, float y) {
+        super(x, y, true, false, false, false, new String[]{"Block"}, Entity.AI.STATIC);
     }
     
 }
