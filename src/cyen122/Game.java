@@ -13,6 +13,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glEnable;
+import world.*;
 
 /**
  * Handles Game States and User calls
@@ -25,13 +26,14 @@ public class Game {
     private static Keybinds in = new Keybinds();
     protected static Viewport cam;
     protected static Runtime run;
+    protected static World world;
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         initDisplay();
-        initRuntime();
+        initWorld();
         gameLoop();
         cleanUp();
     }
@@ -76,8 +78,9 @@ public class Game {
     /**
      * Called on world startup
      */
-    public static void initRuntime(){
-        run = new Runtime();
+    public static void initWorld(){
+        world = new WorldTest();
+        run = new Runtime(world);
     }
     
     /**

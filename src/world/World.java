@@ -6,7 +6,10 @@
 
 package world;
 
+import cyen122.Game;
+import cyen122.Renderer;
 import entity.*;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
@@ -22,32 +25,53 @@ public class World {
     private ArrayList<Entity> entities;
     private Entity[][] locations;   // to reduce collision detection time
                                      // only stores static entities
+    private float[] spawn = new float[2];
     
     /**
      * Loads the world based on an image
      * @param filename the world image
      */
     public World(String filename){
+        entities = new ArrayList();
         try{
             BufferedImage level = ImageIO.read(new File("res/levels/" + filename + ".png"));
-//            setup = new Entity[level.getWidth()][level.getHeight()];
-            // TODO: Setup image parser to fill setup array            
+            locations = new Entity[level.getWidth()][level.getHeight()];
+            
+            // i is World X Position
+            // j is World Y Position
+            for(int i = 0; i < level.getWidth(); i++){
+                for(int j = 0; j < level.getHeight(); j++){
+                    // Source : http://stackoverflow.com/questions/25761438/understanding-bufferedimage-getrgb-output-values
+                    if(Game.DEBUG){
+                        System.out.println("Getting color at " 
+                                    + i + ", " + (level.getHeight() - j - 1));
+                    }
+                    Color c = new Color(level.getRGB(i, (level.getHeight() - j - 1)));
+                    int rgb = 0x010000*c.getRed()
+                             + 0x000100*c.getGreen()
+                             + c.getBlue();
+                    switch(rgb){
+                        case 0x00ff00:      // The Player
+                            spawn[0] = i; spawn[1] = j;
+                            add(new Player(i, j, new String[]{"Slope"}));
+                            break;
+                        case 0x0000ff:      // Terrain
+                            add(new Terrain(i, j));
+                            break;
+                        case 0x00ffff:      // Slope Up
+//                            entities.add(new Slope(i, j, new String[]{"Slope"}));
+                            break;
+                        case 0x7f7f7f:      // Background
+                            break;
+                        default:
+                            System.out.println(rgb + 
+                                   " does not fit the color scheme at "
+                                   + i + ", " + j);
+                    }
+                }
+            }    
         } catch(Exception e){
             e.printStackTrace();
-        }
-        
-        entities = new ArrayList();
-    }
-    
-    /**
-     * FOR TESTING PURPOSES ONLY
-     * Loads a generic world with a floor
-     */
-    public World(){
-        entities = new ArrayList();
-        locations = new Entity[30][10];
-        for(int i = 0; i < 30; i++){
-            add(new Terrain(i, 2));
         }
     }
     
@@ -71,13 +95,13 @@ public class World {
     /**
      * @return The index of the player in the entity list
      */
-    public int getPlayer(){
+    public Player getPlayer(){
         for(int i = 0; i < entities.size(); i++){
             if(entities.get(i) instanceof Player){
-                return i;
+                return (Player) entities.get(i);
             }
         }
-        return -1;  // invalid index
+        return null;
     }
     
     /**
@@ -124,13 +148,15 @@ public class World {
         // resolves handling mobile entity location handling
         if(e.getAI() == Entity.AI.STATIC)
             locations[(int)e.getX()][(int)e.getY()] = e;
+        
+        Renderer.render(e);
     }
     
     public void kill(int entityIndex){
         System.out.println("Killing entity" + entityIndex);
         // Respawn the player if it gets killed
         if(entities.get(entityIndex) instanceof Player)
-            add(new Player(5, 3, new String[]{"Slope"}));
+            add(new Player(spawn[0], spawn[1], new String[]{"Slope"}));
         entities.remove(entityIndex);
     }
 }

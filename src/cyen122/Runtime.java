@@ -13,6 +13,7 @@ import org.lwjgl.opengl.Display;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import world.World;
+import world.WorldTest;
 
 /**
  * Handles game logic and User Input
@@ -24,16 +25,9 @@ public class Runtime {
     private Player player;
     private ArrayList<Entity> entities;
     
-    public Runtime(World w, Player p){
+    public Runtime(World w){
         world = w;
-        player = p;
-        world.add(player);
-    }
-    
-    public Runtime(){
-        world = new World();
-        player = new Player(5, 3, new String[]{"Slope"});
-        world.add(player);
+        player = world.getPlayer();
     }
     
     /**
@@ -138,6 +132,6 @@ public class Runtime {
         entities = world.getEntities();
         
         // enabled respawning for testing purposes
-        player = (Player) entities.get(entities.size()-1);
+        player = world.getPlayer();
     }
 }
