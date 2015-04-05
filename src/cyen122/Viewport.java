@@ -33,8 +33,8 @@ public class Viewport {
      */
     private void initProjection(){
         glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
         glOrtho(0, Display.getWidth(), Display.getHeight(), 0, 1, -1);
+        glMatrixMode(GL_MODELVIEW);        
         glMatrixMode(GL_MODELVIEW);
         
 //        glEnable(GL_DEPTH_TEST);

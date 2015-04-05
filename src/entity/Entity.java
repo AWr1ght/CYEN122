@@ -6,22 +6,20 @@
 package entity;
 
 import cyen122.Game;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.util.ResourceLoader;
 
 /**
- * Superclass for the player, obstacles, and terrain
+ * Superclass for the player, obstacles, terrain, etc.
  *
  * @author Allister Wright
  */
 public abstract class Entity {
 
     public enum AI {
-
         STATIC, PLAYER, SHAMBLE, CHASE
     }
 
@@ -181,8 +179,8 @@ public abstract class Entity {
         try{
             //Source: https://www.youtube.com/watch?v=naE3nbreSUo
             return TextureLoader.getTexture("PNG", 
-                       new FileInputStream(
-                           new File("res/sprites/static/" + t + ".png")));
+                       ResourceLoader.getResourceAsStream(
+                           "res/sprites/static/" + t + ".png"));
         } catch(FileNotFoundException e){
             e.printStackTrace();
         } catch(IOException e){

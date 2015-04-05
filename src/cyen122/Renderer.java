@@ -38,7 +38,6 @@ public class Renderer {
             glVertex2i(toPixels(e.getX()+e.getWidth(), "x"),
                        toPixels(e.getY()+e.getHeight(), "y"));
         glEnd();
-        t.release();
     }
     
     /**
