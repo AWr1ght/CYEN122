@@ -67,9 +67,9 @@ public class Game {
             if(DEBUG){
                 if(in.getAttack()){
                     System.out.println("X Pixel: " + Mouse.getX());
-                    System.out.println("#X Tile: " + (int) Mouse.getX()/32);
+                    System.out.println("#X Tile: " + (int) (Mouse.getX()/32f + cam.getX()));
                     System.out.println("   Y Pixel: " + Mouse.getY());
-                    System.out.println("   #Y Tile: " + (int) Mouse.getY()/32);
+                    System.out.println("   #Y Tile: " + (int) (Mouse.getY()/32f + cam.getY()));
                 }
             }
         }

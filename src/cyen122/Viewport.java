@@ -44,6 +44,14 @@ public class Viewport {
         glCullFace(GL_BACK);
     }
     
+    public float getX(){
+        return position.x;
+    }
+    
+    public float getY(){
+        return position.y;
+    }
+    
     /**
      * Moves along XY plane
      * @param x 

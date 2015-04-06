@@ -7,6 +7,7 @@
 package cyen122;
 
 import entity.Entity;
+import entity.Player;
 import org.lwjgl.opengl.Display;
 import static org.lwjgl.opengl.GL11.*;
 import org.newdawn.slick.opengl.Texture;
@@ -20,23 +21,24 @@ public class Renderer {
     /**
      * Renders a single entity
      * @param e the Entity to render
+     * @param p the Player to render with respect to
      */
-    public static void render(Entity e){
+    public static void render(Entity e, Viewport cam){
         Texture t = e.getTexture();
         t.bind();
         glBegin(GL_QUADS);
             glTexCoord2f(0, 0);
-            glVertex2i(toPixels(e.getX(), "x"),
-                       toPixels(e.getY()+e.getHeight(), "y"));
+            glVertex2i(toPixels(e.getX() - cam.getX(), "x"),
+                       toPixels(e.getY()+e.getHeight()- cam.getY(), "y"));
             glTexCoord2f(0, 1);
-            glVertex2i(toPixels(e.getX(), "x"),
-                       toPixels(e.getY(), "y"));
+            glVertex2i(toPixels(e.getX()- cam.getX(), "x"),
+                       toPixels(e.getY()- cam.getY(), "y"));
             glTexCoord2f(1, 1);
-            glVertex2i(toPixels(e.getX()+e.getWidth(), "x"),
-                       toPixels(e.getY(), "y"));
+            glVertex2i(toPixels(e.getX()+e.getWidth()- cam.getX(), "x"),
+                       toPixels(e.getY()- cam.getY(), "y"));
             glTexCoord2f(1, 0);
-            glVertex2i(toPixels(e.getX()+e.getWidth(), "x"),
-                       toPixels(e.getY()+e.getHeight(), "y"));
+            glVertex2i(toPixels(e.getX()+e.getWidth()- cam.getX(), "x"),
+                       toPixels(e.getY()+e.getHeight()- cam.getY(), "y"));
         glEnd();
     }
     

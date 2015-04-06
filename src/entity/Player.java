@@ -6,29 +6,27 @@
 
 package entity;
 
-import world.World;
-
 /**
  *
  * @author Allister
  */
 public class Player extends Entity{
-    private World parent;
+    private boolean jumping = false;
     private int weapon;     // TODO: Enumerate weapons
     
     public Player(float x, float y, String[] filenames) {
         super(x, y, true, false, false, true, filenames, AI.PLAYER);
     }
     
-    public void jump(){
-        if(parent.getAt(getX(), getY()) != null ||
-               parent.getAt(getX()+1, getY()) != null){
-            setVY(.3f);
-            setY(getY()+.4f);
-        }
+    public void setJumping(boolean j){
+        jumping = j;
     }
     
-    public void setWorld(World w){
-        parent = w;
+    public void jump(){
+        if(!jumping){
+            setVY(.3f);
+            setY(getY()+.4f);
+            jumping = true;
+        }
     }
 }

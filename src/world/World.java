@@ -6,13 +6,12 @@
 
 package world;
 
-import cyen122.Game;
-import cyen122.Renderer;
 import entity.*;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.imageio.ImageIO;
 
 /**
@@ -42,10 +41,10 @@ public class World {
             for(int i = 0; i < level.getWidth(); i++){
                 for(int j = 0; j < level.getHeight(); j++){
                     // Source : http://stackoverflow.com/questions/25761438/understanding-bufferedimage-getrgb-output-values
-                    if(Game.DEBUG){
-                        System.out.println("Getting color at " 
-                                    + i + ", " + (level.getHeight() - j - 1));
-                    }
+//                    if(Game.DEBUG){
+//                        System.out.println("Getting color at " 
+//                                    + i + ", " + (level.getHeight() - j - 1));
+//                    }
                     Color c = new Color(level.getRGB(i, (level.getHeight() - j - 1)));
                     int rgb = 0x010000*c.getRed()
                              + 0x000100*c.getGreen()
@@ -59,7 +58,7 @@ public class World {
                             add(new Terrain(i, j));
                             break;
                         case 0x00ffff:      // Slope Up
-//                            entities.add(new Slope(i, j, new String[]{"Slope"}));
+//                            add(new Slope(i, j, new String[]{"Slope"}));
                             break;
                         case 0x7f7f7f:      // Background
                             break;
@@ -104,6 +103,20 @@ public class World {
         return null;
     }
     
+    public HashMap<int[], Entity> getNear(Entity e){
+        HashMap<int[], Entity> out = new HashMap();
+        int[] place = new int[2];
+        
+        for(int i = 0; i < 3; i++){
+            for(int j= 0; j < 3; j++){
+                place[0] = (int) e.getX() - 2 + i; 
+                place[1] = (int) e.getY() - 2 + j;
+                out.put(place, getAt(place[0], place[1]));
+            }
+        }
+        return out;
+    }
+    
     /**
      * Returns the Entity at a location
      * @param x 
@@ -142,14 +155,10 @@ public class World {
      */
     public void add(Entity e){
         entities.add(e);
-        if(e instanceof Player)
-            ((Player) e).setWorld(this);
         
         // resolves handling mobile entity location handling
         if(e.getAI() == Entity.AI.STATIC)
             locations[(int)e.getX()][(int)e.getY()] = e;
-        
-        Renderer.render(e);
     }
     
     public void kill(int entityIndex){

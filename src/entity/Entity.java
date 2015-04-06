@@ -8,6 +8,7 @@ package entity;
 import cyen122.Game;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
@@ -154,18 +155,22 @@ public abstract class Entity {
      *      3 = right 
      *      4 = up
      */
-    public int isColliding(Entity e) {
-        if (y < e.y + e.h) {
-            return 1;
-        } else if (x < e.x + e.w) {
-            return 2;
-        } else if (x + w > e.x) {
-            return 3;
-        } else if (y + e.h < e.y) {
-            return 4;
+    public ArrayList<Integer> isColliding(Entity e) {
+        ArrayList<Integer> collisions = new ArrayList();
+        if (e.isSolid){
+            if(y <= e.y + e.h && y >= e.y + e.h/2f)
+                collisions.add(1);
+            if(y + h >= e.y && y + h <= e.y + e.h/2f)
+                collisions.add(4);
+            if(x + w >= e.x && x + w <= e.x + e.w/2 
+                    && y > e.y + .1 && y < e.y + e.h -.1
+                    )
+                collisions.add(3);
+            if(x < e.x + e.w && x >= e.x + e.w/2
+                    && y > e.y + .1 && y < e.y + e.h - .1)
+                collisions.add(2);
         }
-        // If none of the entities registered a collision
-        return 0;
+        return collisions;
     }
 
     /**

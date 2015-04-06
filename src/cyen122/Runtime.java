@@ -13,7 +13,6 @@ import org.lwjgl.opengl.Display;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import world.World;
-import world.WorldTest;
 
 /**
  * Handles game logic and User Input
@@ -21,6 +20,8 @@ import world.WorldTest;
  */
 public class Runtime {
     private Keybinds in = new Keybinds();
+    private Viewport cam = Game.cam;
+    
     private final World world;
     private Player player;
     private ArrayList<Entity> entities;
@@ -37,30 +38,41 @@ public class Runtime {
         entities = world.getEntities();
         trim();
         tickInput();
+        setCamera();
         
         for (Entity curr : entities) {
+            curr.setY(curr.getY() + curr.getVY());
+            doGravity(curr);
+            
             // Make the current entity collide iff the entity shouldn't move
             if(curr.getAI() != Entity.AI.STATIC){
-                for(Entity e : entities){
-                    if(curr != e){
-                        if(curr.isColliding(e) == 1 && e.isSolid()){
-                            curr.setVY(0);
-                            curr.setY((int) curr.getY() + 1);
+                for(Entity e : world.getNear(curr).values()){
+                    if(e != null && curr != e){
+                        ArrayList<Integer> collisions = curr.isColliding(e);
+                        if(Game.DEBUG) System.out.println(collisions.size());
+                        if(collisions.contains(1)){
+                            if(Game.DEBUG) System.out.println("Hit on the Bottom");
+                            if(collisions.size() == 1){
+                                if(curr instanceof Player) ((Player) curr).setJumping(false);
+                                curr.setVY(0);
+                                curr.setY((int) (curr.getY() + 1));
+                            }
                         }
-                        /*
-                        *   TODO: implement more stuff
-                        *   .
-                        *   .
-                        *   .
-                        */
+                        if(collisions.contains(2)){
+                            if(Game.DEBUG) System.out.println("Hit to the Left");
+                            curr.setX((int) curr.getX() + 1);
+                        } 
+                        if(collisions.contains(3)){
+                            if(Game.DEBUG) System.out.println("Hit to the Right");
+                            curr.setX((int) curr.getX());
+                        }
+                        if(collisions.contains(4)){
+                            if(Game.DEBUG) System.out.println("Hit to the Top");
+                            curr.setY((int) (curr.getY()));
+                        }
                     }
                 }
             }
-            
-            // Make the current entitiy fall
-            curr.setY(curr.getY() + curr.getVY());
-            if(curr.hasGravity())
-                curr.setVY(curr.getVY() - .01f);
             
             switch(curr.getAI()){
                 case PLAYER:    // The player
@@ -86,9 +98,8 @@ public class Runtime {
      * Checks user input each game tick
      */
     private void tickInput(){
-        if(in.getUp()){
+        if(in.getUp())
             player.jump();
-        } 
         if(in.getDown())
             // TODO: Replace with sliding. . . somewhen
             player.setY(player.getY() - .2f);
@@ -101,13 +112,20 @@ public class Runtime {
         if(in.getEsc());
     }
     
+    private void setCamera(){
+        float toX, toY;
+        toX = player.getX() - 5;
+        toY = Math.max(0, Math.min(player.getY() - 4, world.getHeight()));
+        cam.moveTo(toX, 0);
+    }
+    
     /**
      * Renders the world entities each game tick
      */
     public void renderWorld(){
         glClear(GL_COLOR_BUFFER_BIT);
         for(Entity e : entities){
-            Renderer.render(e);
+            Renderer.render(e, cam);
         }
         Display.update();
         Display.sync(144);
@@ -133,5 +151,10 @@ public class Runtime {
         
         // enabled respawning for testing purposes
         player = world.getPlayer();
+    }
+    
+    private void doGravity(Entity e){
+        if(e.hasGravity())
+                e.setVY(e.getVY() - .01f);
     }
 }
