@@ -25,6 +25,7 @@ public class Keybinds {
         public static final Key left = new Key(Keyboard.KEY_A);
         public static final Key right = new Key(Keyboard.KEY_D);
         public static final Key jump = new Key(Keyboard.KEY_SPACE);
+        public static final Key shift = new Key(Keyboard.KEY_LSHIFT);
         public static final Key esc = new Key(Keyboard.KEY_ESCAPE);
     }
 
@@ -46,6 +47,10 @@ public class Keybinds {
 
     public boolean getJump() {
         return getKeyState(Key.jump);
+    }
+    
+    public boolean getShift() {
+        return getKeyState(Key.shift);
     }
 
     public boolean getEsc() {

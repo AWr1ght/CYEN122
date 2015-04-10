@@ -24,7 +24,7 @@ public class Player extends Entity{
     
     public void jump(){
         if(!jumping){
-            setVY(.3f);
+            setVY(.2f);
             setY(getY()+.4f);
             jumping = true;
         }

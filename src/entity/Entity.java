@@ -23,8 +23,11 @@ public abstract class Entity {
     public enum AI {
         STATIC, PLAYER, SHAMBLE, CHASE
     }
+    
+    private static final float DEFAULT_MAX_SPEED = .2f;
 
-    private float x, y, w, h, vx, vy;
+    private float x, y, w, h, vx, vy, maxLatSpeed;
+    private short direction;
     private final boolean isSolid, isDamaging, isSlowing;
     private boolean hasGravity;
     private String[] sprite;    // animation filenames
@@ -42,6 +45,8 @@ public abstract class Entity {
         h = (float) (texture.getImageHeight()/32);
         vx = 0;
         vy = 0;
+        direction = 0;
+        maxLatSpeed = .3f;
         isSolid = solid;
         isDamaging = dmg;
         isSlowing = slow;
@@ -60,6 +65,8 @@ public abstract class Entity {
         h = height;
         vx = 0;
         vy = 0;
+        direction = 0;
+        maxLatSpeed = .3f;
         isSolid = solid;
         isDamaging = dmg;
         isSlowing = slow;
@@ -91,6 +98,10 @@ public abstract class Entity {
 
     public float getVY() {
         return vy;
+    }
+    
+    public int getDirection(){
+        return direction;
     }
     
     public boolean isSolid(){
@@ -126,11 +137,18 @@ public abstract class Entity {
     }
 
     public void setVX(float v) {
-        vx = v;
+        vx = Math.max(-maxLatSpeed, Math.min(v, maxLatSpeed));
+        if(Math.abs(vx) < .01) vx = 0;      // handle floating point rounding errors
+        direction = (vx == 0) ? 0 : (short) (Math.abs(vx)/vx);
+        if(Game.DEBUG) System.out.println(vx + " : " + direction);
     }
 
     public void setVY(float v) {
         vy = v;
+    }
+    
+    public void setMaxSpeed(float m){
+        maxLatSpeed = (m == 0) ? DEFAULT_MAX_SPEED : Math.min(0, m);
     }
 
     public void setGravity(boolean grav) {

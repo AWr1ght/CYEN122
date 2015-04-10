@@ -44,7 +44,7 @@ public class Game {
     public static void initDisplay() {
         try {
             Display.setDisplayMode(new DisplayMode(960, 720));
-            Display.setTitle("Seal Team 6");
+            Display.setTitle("Zombie Run");
             Display.create();
             glEnable(GL_TEXTURE_2D);
             

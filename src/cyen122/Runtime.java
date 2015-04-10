@@ -42,6 +42,7 @@ public class Runtime {
         
         for (Entity curr : entities) {
             curr.setY(curr.getY() + curr.getVY());
+            curr.setX(curr.getX() + curr.getVX());
             doGravity(curr);
             
             // Make the current entity collide iff the entity shouldn't move
@@ -54,21 +55,25 @@ public class Runtime {
                             if(Game.DEBUG) System.out.println("Hit on the Bottom");
                             if(collisions.size() == 1){
                                 if(curr instanceof Player) ((Player) curr).setJumping(false);
-                                curr.setVY(0);
-                                curr.setY((int) (curr.getY() + 1));
+                                curr.setVY(0);                                  // make the entitiy not fall
+                                curr.setY((int) (curr.getY() + 1));             // reset the position
+                                curr.setVX(curr.getVX() -.3f*curr.getVX());     // create friction
                             }
                         }
                         if(collisions.contains(2)){
                             if(Game.DEBUG) System.out.println("Hit to the Left");
+                            curr.setVX(0);
                             curr.setX((int) curr.getX() + 1);
                         } 
                         if(collisions.contains(3)){
                             if(Game.DEBUG) System.out.println("Hit to the Right");
+                            curr.setVX(0);
                             curr.setX((int) curr.getX());
                         }
                         if(collisions.contains(4)){
                             if(Game.DEBUG) System.out.println("Hit to the Top");
-                            curr.setY((int) (curr.getY()));
+                            curr.setVY(-.3f);
+                            curr.setY((int) (curr.getY()) - 1);
                         }
                     }
                 }
@@ -98,17 +103,20 @@ public class Runtime {
      * Checks user input each game tick
      */
     private void tickInput(){
+        if(in.getShift())
+            player.setMaxSpeed(.1f);
+        else player.setMaxSpeed(0); //  resets to default
         if(in.getUp())
             player.jump();
         if(in.getDown())
             // TODO: Replace with sliding. . . somewhen
-            player.setY(player.getY() - .2f);
+            player.setVY(player.getVY() - .2f);
         if(in.getLeft())
-            player.setX(player.getX() - .2f);
+            player.setVX(player.getVX() - .2f);
         if(in.getRight())
-            player.setX(player.getX() + .2f);
+            player.setVX(player.getVX() + .2f);
         if(in.getJump())
-            player.setY(player.getY() + 2);
+            player.jump();
         if(in.getEsc());
     }
     
