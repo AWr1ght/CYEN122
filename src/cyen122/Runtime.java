@@ -35,29 +35,34 @@ public class Runtime {
      * Does game ticks on non-static objects (i.e. Player, Shamblers, and Pack)
      */
     public void tick(){
+        if(Game.DEBUG) System.out.println("RUNTIME TICK");
         entities = world.getEntities();
         trim();
         tickInput();
         setCamera();
         
         for (Entity curr : entities) {
-            curr.setY(curr.getY() + curr.getVY());
-            curr.setX(curr.getX() + curr.getVX());
-            doGravity(curr);
+            doMomentum(curr);
             
             // Make the current entity collide iff the entity shouldn't move
             if(curr.getAI() != Entity.AI.STATIC){
-                for(Entity e : world.getNear(curr).values()){
+                for(Entity e : world.getNear(curr)){
                     if(e != null && curr != e){
                         ArrayList<Integer> collisions = curr.isColliding(e);
-                        if(Game.DEBUG) System.out.println(collisions.size());
+//                        if(Game.DEBUG) System.out.println(collisions.size());
                         if(collisions.contains(1)){
                             if(Game.DEBUG) System.out.println("Hit on the Bottom");
                             if(collisions.size() == 1){
                                 if(curr instanceof Player) ((Player) curr).setJumping(false);
                                 curr.setVY(0);                                  // make the entitiy not fall
-                                curr.setY((int) (curr.getY() + 1));             // reset the position
                                 curr.setVX(curr.getVX() -.3f*curr.getVX());     // create friction
+                                
+                                // collision list is wrt a single entity at
+                                // a time; therefore, 0 <= cxs.size() <= 2
+                                if(collisions.size() < 3){                      // avoids vertical wallrunning
+                                    if(Game.DEBUG) System.out.println(collisions.size());
+                                    curr.setY((int) curr.getY() + 1);           // reset the position
+                                }
                             }
                         }
                         if(collisions.contains(2)){
@@ -72,8 +77,8 @@ public class Runtime {
                         }
                         if(collisions.contains(4)){
                             if(Game.DEBUG) System.out.println("Hit to the Top");
-                            curr.setVY(-.3f);
-                            curr.setY((int) (curr.getY()) - 1);
+                            curr.setVY(-.1f);   // Becomes spiderman if set to 0
+                            curr.setY((int) curr.getY());
                         }
                     }
                 }
@@ -161,7 +166,18 @@ public class Runtime {
         player = world.getPlayer();
     }
     
-    private void doGravity(Entity e){
+    /**
+     * Does gravity on an entity
+     * @param e the entity to accelerate downwards
+     */
+    private void doMomentum(Entity e){
+        
+        // Optimisation step - avoids trying to move nonmoving things
+        if(e.getAI() != Entity.AI.STATIC){
+            e.setY(e.getY() + e.getVY());
+            e.setX(e.getX() + e.getVX());
+        }
+        
         if(e.hasGravity())
                 e.setVY(e.getVY() - .01f);
     }

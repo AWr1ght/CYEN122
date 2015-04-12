@@ -6,6 +6,7 @@
 
 package world;
 
+import cyen122.Game;
 import entity.*;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -103,17 +104,23 @@ public class World {
         return null;
     }
     
-    public HashMap<int[], Entity> getNear(Entity e){
-        HashMap<int[], Entity> out = new HashMap();
-        int[] place = new int[2];
+    public ArrayList<Entity> getNear(Entity e){
+        ArrayList<Entity> out = new ArrayList();
+        Entity check;
         
         for(int i = 0; i < 3; i++){
-            for(int j= 0; j < 3; j++){
-                place[0] = (int) e.getX() - 2 + i; 
-                place[1] = (int) e.getY() - 2 + j;
-                out.put(place, getAt(place[0], place[1]));
+            for(int j = 0; j < 3; j++){
+                check = getAt((int) e.getX() + i, (int) e.getY() + j);
+                if(check != null)
+                    out.add(check);
             }
         }
+        
+        if(Game.DEBUG) 
+            if(out.size() > 0)
+                System.out.println(out.size() + " Entities near " + 
+                    e.getX() + ", " + e.getY());
+        
         return out;
     }
     

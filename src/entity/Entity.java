@@ -125,6 +125,7 @@ public abstract class Entity {
     }
 
     public void setY(float y) {
+//        if(Game.DEBUG) System.out.println("Y set to " + y);
         this.y = y;
     }
 
@@ -140,7 +141,7 @@ public abstract class Entity {
         vx = Math.max(-maxLatSpeed, Math.min(v, maxLatSpeed));
         if(Math.abs(vx) < .01) vx = 0;      // handle floating point rounding errors
         direction = (vx == 0) ? 0 : (short) (Math.abs(vx)/vx);
-        if(Game.DEBUG) System.out.println(vx + " : " + direction);
+//        if(Game.DEBUG) System.out.println(vx + " : " + direction);
     }
 
     public void setVY(float v) {
@@ -148,7 +149,7 @@ public abstract class Entity {
     }
     
     public void setMaxSpeed(float m){
-        maxLatSpeed = (m == 0) ? DEFAULT_MAX_SPEED : Math.min(0, m);
+        maxLatSpeed = (m == 0) ? DEFAULT_MAX_SPEED : Math.max(0, m);
     }
 
     public void setGravity(boolean grav) {
@@ -176,17 +177,28 @@ public abstract class Entity {
     public ArrayList<Integer> isColliding(Entity e) {
         ArrayList<Integer> collisions = new ArrayList();
         if (e.isSolid){
-            if(y <= e.y + e.h && y >= e.y + e.h/2f)
+//            if(Game.DEBUG){
+//                System.out.println("y: " + y);
+//                System.out.println("y+h: " + (y+h));
+//                System.out.println("   e.y: " + e.y);
+//                System.out.println("   e.y+e.h: " + (e.y+e.h));
+//            }
+            
+            if(Game.inRange(y, e.y + e.h/2f, e.y+e.h))
+                if(Game.inRange(x, e.x, e.x + e.w))
                 collisions.add(1);
-            if(y + h >= e.y && y + h <= e.y + e.h/2f)
-                collisions.add(4);
-            if(x + w >= e.x && x + w <= e.x + e.w/2 
-                    && y > e.y + .1 && y < e.y + e.h -.1
-                    )
-                collisions.add(3);
-            if(x < e.x + e.w && x >= e.x + e.w/2
-                    && y > e.y + .1 && y < e.y + e.h - .1)
-                collisions.add(2);
+            
+            if(Game.inRange(e.y, y + h/2f, y + h))
+                if(Game.inRange(x, e.x, e.x + e.w))
+                    collisions.add(4);
+            
+            if(Game.inRange(e.x, x + w/2f, x + w))
+                if (x + w - e.x > Math.abs(y - e.y))
+                    collisions.add(3);
+            
+            if(Game.inRange(x, e.x + e.h/2f, e.x + e.h))
+                if (e.x + e.w - x > Math.abs(y - e.y))
+                    collisions.add(2);
         }
         return collisions;
     }

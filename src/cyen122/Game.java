@@ -89,4 +89,16 @@ public class Game {
     public static void cleanUp(){
         Display.destroy();
     }
+    
+    /**
+     * Checks if a value is within a range
+     * Designed to clean up collision detection
+     * @param v the value to check
+     * @param min the minimum
+     * @param max the maximum
+     * @return min <= v && max >= v;
+     */
+    public static boolean inRange(float v, float min, float max){
+        return min <= v && max >= v;
+    }
 }
