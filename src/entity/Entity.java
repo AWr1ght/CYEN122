@@ -168,7 +168,7 @@ public abstract class Entity {
     /**
      * @param e the other Entity to check collision
      * @return The direction of collision: 
-     *      0 = No collission 
+     *      0 = No collision 
      *      1 = down 
      *      2 = left 
      *      3 = right 

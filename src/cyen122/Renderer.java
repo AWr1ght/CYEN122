@@ -7,7 +7,6 @@
 package cyen122;
 
 import entity.Entity;
-import entity.Player;
 import org.lwjgl.opengl.Display;
 import static org.lwjgl.opengl.GL11.*;
 import org.newdawn.slick.opengl.Texture;

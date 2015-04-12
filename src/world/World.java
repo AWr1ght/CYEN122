@@ -12,7 +12,6 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import javax.imageio.ImageIO;
 
 /**
@@ -24,7 +23,7 @@ public class World {
     private String filename;    // Every level will have a map containing the level data
     private ArrayList<Entity> entities;
     private Entity[][] locations;   // to reduce collision detection time
-                                     // only stores static entities
+                                    // only stores static entities
     private float[] spawn = new float[2];
     
     /**
