@@ -57,12 +57,10 @@ public class Runtime {
                                 curr.setVY(0);                                  // make the entitiy not fall
                                 curr.setVX(curr.getVX() -.3f*curr.getVX());     // create friction
                                 
-                                // collision list is wrt a single entity at
-                                // a time; therefore, 0 <= cxs.size() <= 2
-                                if(collisions.size() < 3){                      // avoids vertical wallrunning
-                                    if(Game.DEBUG) System.out.println(collisions.size());
-                                    curr.setY((int) curr.getY() + 1);           // reset the position
-                                }
+                                // Force upward if the tile above e is empty
+                                if(world.getAt(e.getX(), e.getY() + 1) == null && 
+                                   world.getAt(e.getX() + 1, e.getY() + 1) == null)
+                                    curr.setY((int) curr.getY() + 1);
                             }
                         }
                         if(collisions.contains(2)){

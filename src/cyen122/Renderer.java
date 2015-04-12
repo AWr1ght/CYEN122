@@ -21,7 +21,7 @@ public class Renderer {
     /**
      * Renders a single entity
      * @param e the Entity to render
-     * @param p the Player to render with respect to
+     * @param cam the camera to render wrt
      */
     public static void render(Entity e, Viewport cam){
         Texture t = e.getTexture();
@@ -44,7 +44,7 @@ public class Renderer {
     
     /**
      * Converts metric World/Entity space to Pixelspace
-     * @param t location in Cartesian tilespace
+     * @param t location in continuous tilespace
      * @return pixel location of the object
      */
     private static int toPixels(float t, String dir){
