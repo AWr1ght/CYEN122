@@ -19,7 +19,8 @@ import org.newdawn.slick.util.ResourceLoader;
  * @author Allister Wright
  */
 public abstract class Entity {
-
+    
+    // TODO: Replace with states valid for zombie play
     public enum AI {
         STATIC, PLAYER, SHAMBLE, CHASE
     }

@@ -49,7 +49,6 @@ public class Runtime {
                 for(Entity e : world.getNear(curr)){
                     if(e != null && curr != e){
                         ArrayList<Integer> collisions = curr.isColliding(e);
-//                        if(Game.DEBUG) System.out.println(collisions.size());
                         if(collisions.contains(1)){
                             if(Game.DEBUG) System.out.println("Hit on the Bottom");
                             if(collisions.size() == 1){
