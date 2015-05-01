@@ -137,8 +137,6 @@ public class Runtime {
         for(Entity e : entities){
             Renderer.render(e, cam);
         }
-        Display.update();
-        Display.sync(144);
     }
     
     /**

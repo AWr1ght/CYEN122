@@ -6,14 +6,6 @@
 package cyen122;
 
 import static cyen122.Game.cam;
-import java.awt.BorderLayout;
-import java.awt.Canvas;
-import java.awt.Frame;
-import java.awt.Toolkit;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -22,6 +14,7 @@ import static org.lwjgl.opengl.GL11.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.DisplayMode;
 
 import world.*;
 
@@ -40,8 +33,8 @@ public class Game {
         MAIN_MENU, LEVEL_SELECT, LOADING, PLAYING, LEVEL_FINISHED, CREDITS
     }
     
-    private static Frame frame;
-    private static final Canvas canvas = new Canvas();
+//    private static Frame frame;
+//    private static final Canvas canvas = new Canvas();
     
     private static Keybinds in = new Keybinds();    
     private static State state = State.MAIN_MENU;
@@ -66,25 +59,25 @@ public class Game {
                 forum.lwjgl.org/index.php?topic=4275.0
                 http://wiki.lwjgl.org/index.php?title=Using_a_Resizeable_AWT_Frame_with_LWJGL
         */
-        frame = new Frame("Zombie Run");
-        frame.setLayout(new BorderLayout());
-        frame.add(canvas, BorderLayout.CENTER);
+//        frame = new Frame("Zombie Run");
+//        frame.setLayout(new BorderLayout());
+//        frame.add(canvas, BorderLayout.CENTER);
         
         try {
-            Display.setParent(canvas);
-            canvas.setSize(WIDTH, HEIGHT);
-            canvas.requestFocus();
-            frame.setResizable(false);
-            frame.pack();
+//            Display.setParent(canvas);
+//            canvas.setSize(WIDTH, HEIGHT);
+//            canvas.requestFocus();
+//            frame.setResizable(false);
+//            frame.pack();
             
             // Source: Dr. Gourd's Simple Sample Game
-            frame.setLocation(
-                    (Toolkit.getDefaultToolkit().getScreenSize().width - frame.getWidth())/2,
-                    (Toolkit.getDefaultToolkit().getScreenSize().height - frame.getHeight())/2);
-            frame.setVisible(true);
+//            frame.setLocation(
+//                    (Toolkit.getDefaultToolkit().getScreenSize().width - frame.getWidth())/2,
+//                    (Toolkit.getDefaultToolkit().getScreenSize().height - frame.getHeight())/2);
+//            frame.setVisible(true);
             
-//            Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
-//            Display.setTitle("Zombie Run");
+            Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
+            Display.setTitle("Zombie Run");
             
             Display.create();
             glEnable(GL_TEXTURE_2D);
@@ -97,25 +90,25 @@ public class Game {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        addListeners();
+//        addListeners();
     }
     
     private static void addListeners(){
-        // Source: http://stackoverflow.com/questions/9093448/do-something-when-the-close-button-is-clicked-on-a-jframe
-        frame.addWindowListener(new WindowAdapter(){
-            @Override
-            public void windowClosing(WindowEvent e){
-                System.exit(0);
-            }
-        });
-        
-        canvas.addMouseListener(new MouseAdapter(){
-            @Override
-            public void mouseReleased(MouseEvent e){
-                System.out.println("Mouse Pressed!");
-                setState(State.PLAYING);
-            }
-        });
+//        // Source: http://stackoverflow.com/questions/9093448/do-something-when-the-close-button-is-clicked-on-a-jframe
+//        frame.addWindowListener(new WindowAdapter(){
+//            @Override
+//            public void windowClosing(WindowEvent e){
+//                System.exit(0);
+//            }
+//        });
+//        
+//        canvas.addMouseListener(new MouseAdapter(){
+//            @Override
+//            public void mouseReleased(MouseEvent e){
+//                System.out.println("Mouse Pressed!");
+//                setState(State.PLAYING);
+//            }
+//        });
     }
     
     /**
@@ -137,6 +130,9 @@ public class Game {
                     System.out.println("   #Y Tile: " + (int) (Mouse.getY() / 32f + cam.getY()));
                 }
             }
+            
+            Display.update();
+            Display.sync(144);
         }
     }
     
