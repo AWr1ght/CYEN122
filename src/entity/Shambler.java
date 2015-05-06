@@ -12,7 +12,12 @@ package entity;
  */
 public class Shambler extends Entity{
     
-    public Shambler(float x, float y, String[] filenames) {
-        super(x, y, true, true, true, true, filenames, Entity.AI.SHAMBLE);
+    public Shambler(float x, float y, int t) {
+        super(x, y, true, true, true, true, Entity.AI.MOBILE);
+        // TODO: Add textures
+    }
+    
+    public Shambler(float x, float y){
+        this(x, y, 0);
     }
 }

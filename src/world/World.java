@@ -52,13 +52,16 @@ public class World {
                     switch(rgb){
                         case 0x00ff00:      // The Player
                             spawn[0] = i; spawn[1] = j;
-                            add(new Player(i, j, new String[]{"Slope"}));
+                            add(new Player(i, j, 0));
                             break;
                         case 0x0000ff:      // Terrain
                             add(new Terrain(i, j));
                             break;
                         case 0x00ffff:      // Slope Up
 //                            add(new Slope(i, j, new String[]{"Slope"}));
+                            break;
+                        case 0xffff00:
+                            add(new LevelEnd(i, j));
                             break;
                         case 0x7f7f7f:      // Background
                             break;
@@ -171,7 +174,7 @@ public class World {
         System.out.println("Killing entity" + entityIndex);
         // Respawn the player if it gets killed
         if(entities.get(entityIndex) instanceof Player)
-            add(new Player(spawn[0], spawn[1], new String[]{"Slope"}));
+            add(new Player(spawn[0], spawn[1], 0));
         entities.remove(entityIndex);
     }
 }

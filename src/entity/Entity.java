@@ -22,7 +22,7 @@ public abstract class Entity {
     
     // TODO: Replace with states valid for zombie play
     public enum AI {
-        STATIC, PLAYER, SHAMBLE, CHASE
+        STATIC, PLAYER, MOBILE
     }
     
     private static final float DEFAULT_MAX_SPEED = .2f;
@@ -32,14 +32,15 @@ public abstract class Entity {
     private final boolean isSolid, isDamaging, isSlowing;
     private boolean hasGravity;
     private String[] sprite;    // animation filenames
-    private Texture texture;    // static texture filename
+    private ArrayList<String[]> validDisp;  // For storing valid animations in an entity
+    
+    private Texture texture;    // the currently loaded texture
     private AI ai;
     
     // TODO: Implement Entity(...) for animated and static entities
     public Entity(float x0, float y0,
-            boolean solid, boolean dmg, boolean slow, boolean grav,
-            String[] filenames, AI ai) {
-        setTexture(filenames[0]);
+            boolean solid, boolean dmg, boolean slow, boolean grav, AI ai) {
+//        setTexture(filenames[0], still);
         x = x0;
         y = y0;
         w = (float) (texture.getImageWidth()/32);
@@ -52,14 +53,13 @@ public abstract class Entity {
         isDamaging = dmg;
         isSlowing = slow;
         hasGravity = grav;
-        sprite = filenames;
+//        sprite = filenames;
         this.ai = ai;
     }
 
     public Entity(float x0, float y0, float width, float height,
-            boolean solid, boolean dmg, boolean slow, boolean grav,
-            String[] filenames, AI ai) {
-        setTexture(filenames[0]);
+            boolean solid, boolean dmg, boolean slow, boolean grav, AI ai) {
+//        setTexture(filenames[0], still);
         x = x0;
         y = y0;
         w = width;
@@ -72,7 +72,7 @@ public abstract class Entity {
         isDamaging = dmg;
         isSlowing = slow;
         hasGravity = grav;
-        sprite = filenames;
+//        sprite = filenames;
         this.ai = ai;
     }
 
@@ -156,9 +156,13 @@ public abstract class Entity {
     public void setGravity(boolean grav) {
         hasGravity = grav;
     }
+    
+    protected void addSprite(String[] frames){
+        validDisp.add(frames);
+    }
 
-    public void setTexture(String t) {
-        texture = loadTexture(t);
+    public void setTexture(int textureIndex) {
+        texture = loadTexture(textureIndex);
     }
 
     public void setAI(AI ai) {
@@ -210,18 +214,31 @@ public abstract class Entity {
      * @param t the filename of the texture to load
      */
 //    private Texture loadTexture(String t){
-    private Texture loadTexture(String t) {
-        if(Game.DEBUG) System.out.println("Loading " + t);
-        try{
-            //Source: https://www.youtube.com/watch?v=naE3nbreSUo
-            return TextureLoader.getTexture("PNG", 
-                       ResourceLoader.getResourceAsStream(
-                           "res/sprites/static/" + t + ".png"));
-        } catch(FileNotFoundException e){
-            e.printStackTrace();
-        } catch(IOException e){
-            e.printStackTrace();
-        }
+    private Texture loadTexture(int textureIndex) {
+        if(Game.DEBUG) System.out.println("Loading Texture");
+//        if(isStatic){
+            try{
+                //Source: https://www.youtube.com/watch?v=naE3nbreSUo
+                return TextureLoader.getTexture("PNG", 
+                           ResourceLoader.getResourceAsStream(
+                               "res/sprites/static/" + validDisp.get(textureIndex)[0] + ".png"));
+            } catch(FileNotFoundException e){
+                e.printStackTrace();
+            } catch(IOException e){
+                e.printStackTrace();
+            }
+//        } else {
+//            try{
+//                //Source: https://www.youtube.com/watch?v=naE3nbreSUo
+//                return TextureLoader.getTexture("GIF", 
+//                           ResourceLoader.getResourceAsStream(
+//                               "res/sprites/anim/" + t + ".gif"));
+//            } catch(FileNotFoundException e){
+//                e.printStackTrace();
+//            } catch(IOException e){
+//                e.printStackTrace();
+//            }
+//        }
         return null;    // Will cause a crash on NullPointerExeption
     }
 }

@@ -12,8 +12,14 @@ package entity;
  */
 public class Terrain extends Entity{
 
-    public Terrain(float x, float y) {
-        super(x, y, true, false, false, false, new String[]{"Block"}, Entity.AI.STATIC);
+    public Terrain(float x, float y, int t) {
+        super(x, y, true, false, false, false, Entity.AI.STATIC);
+        addSprite(new String[]{"Block"});
+        setTexture(t);
+    }
+    
+    public Terrain(float x, float y){
+        this(x, y, 0);
     }
     
 }

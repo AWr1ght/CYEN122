@@ -3,21 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package entity;
 
 /**
  *
- * @author Allister
+ * @author allis_000
  */
-public class Hurdle extends Entity{
-
-    public Hurdle(float x, float y, int t) {
-        super(x, y, true, false, true, false, Entity.AI.STATIC);
-        // TODO: Add textures
+public class LevelEnd extends Entity{
+    public LevelEnd(float x, float y, int t) {
+        super(x, y, true, false, false, false, AI.STATIC);
+        addSprite(new String[]{"Slope"});
+        setTexture(t);
     }
     
-    public Hurdle(float x, float y){
+    public LevelEnd(float x, float y){
         this(x, y, 0);
     }
     

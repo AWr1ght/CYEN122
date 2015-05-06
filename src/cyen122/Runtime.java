@@ -9,7 +9,6 @@ package cyen122;
 import entity.Entity;
 import entity.Player;
 import java.util.ArrayList;
-import org.lwjgl.opengl.Display;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import world.World;
@@ -85,10 +84,7 @@ public class Runtime {
                 case PLAYER:    // The player
                     
                     break;
-                case CHASE:     // Deadly, deadly mob
-                    
-                    break;
-                case SHAMBLE:   // Live Obstacles
+                case MOBILE:   // Live Obstacles
                     
                     break;
                 case STATIC:    // Terrain, Hurdles
