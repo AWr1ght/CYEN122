@@ -32,15 +32,18 @@ public abstract class Entity {
     private final boolean isSolid, isDamaging, isSlowing;
     private boolean hasGravity;
     private String[] sprite;    // animation filenames
-    private ArrayList<String[]> validDisp;  // For storing valid animations in an entity
+    protected ArrayList<String[]> validDisp;  // For storing valid animations in an entity
     
     private Texture texture;    // the currently loaded texture
     private AI ai;
     
-    // TODO: Implement Entity(...) for animated and static entities
-    public Entity(float x0, float y0,
-            boolean solid, boolean dmg, boolean slow, boolean grav, AI ai) {
-//        setTexture(filenames[0], still);
+    public Entity(float x0, float y0, boolean solid, boolean dmg, 
+            boolean slow, boolean grav, AI ai) {
+        // Let's just set a default to avoid a NullPointer Exception
+        validDisp = new ArrayList<String[]>();
+        addSprite(new String[]{"Block"});
+        setTexture(0, 0);
+        
         x = x0;
         y = y0;
         w = (float) (texture.getImageWidth()/32);
@@ -53,13 +56,12 @@ public abstract class Entity {
         isDamaging = dmg;
         isSlowing = slow;
         hasGravity = grav;
-//        sprite = filenames;
         this.ai = ai;
     }
 
     public Entity(float x0, float y0, float width, float height,
             boolean solid, boolean dmg, boolean slow, boolean grav, AI ai) {
-//        setTexture(filenames[0], still);
+        validDisp = new ArrayList<String[]>();
         x = x0;
         y = y0;
         w = width;
@@ -72,7 +74,6 @@ public abstract class Entity {
         isDamaging = dmg;
         isSlowing = slow;
         hasGravity = grav;
-//        sprite = filenames;
         this.ai = ai;
     }
 
@@ -161,8 +162,8 @@ public abstract class Entity {
         validDisp.add(frames);
     }
 
-    public void setTexture(int textureIndex) {
-        texture = loadTexture(textureIndex);
+    public void setTexture(int textureIndex, int frame) {
+        texture = loadTexture(textureIndex, frame);
     }
 
     public void setAI(AI ai) {
@@ -214,31 +215,31 @@ public abstract class Entity {
      * @param t the filename of the texture to load
      */
 //    private Texture loadTexture(String t){
-    private Texture loadTexture(int textureIndex) {
+    private Texture loadTexture(int textureIndex, int frame) {
         if(Game.DEBUG) System.out.println("Loading Texture");
 //        if(isStatic){
             try{
                 //Source: https://www.youtube.com/watch?v=naE3nbreSUo
                 return TextureLoader.getTexture("PNG", 
                            ResourceLoader.getResourceAsStream(
-                               "res/sprites/static/" + validDisp.get(textureIndex)[0] + ".png"));
+                               "res/sprites/static/" + validDisp.get(textureIndex)[frame] + ".png"));
             } catch(FileNotFoundException e){
                 e.printStackTrace();
             } catch(IOException e){
                 e.printStackTrace();
+            } catch(ArrayIndexOutOfBoundsException e){
+                try{
+                //Source: https://www.youtube.com/watch?v=naE3nbreSUo
+                return TextureLoader.getTexture("PNG", 
+                           ResourceLoader.getResourceAsStream(
+                               "res/sprites/static/" + validDisp.get(textureIndex)[
+                                       frame%validDisp.get(textureIndex).length] + ".png"));
+                } catch(FileNotFoundException ex){
+                    e.printStackTrace();
+                } catch(IOException ex){
+                    e.printStackTrace();
+                }
             }
-//        } else {
-//            try{
-//                //Source: https://www.youtube.com/watch?v=naE3nbreSUo
-//                return TextureLoader.getTexture("GIF", 
-//                           ResourceLoader.getResourceAsStream(
-//                               "res/sprites/anim/" + t + ".gif"));
-//            } catch(FileNotFoundException e){
-//                e.printStackTrace();
-//            } catch(IOException e){
-//                e.printStackTrace();
-//            }
-//        }
         return null;    // Will cause a crash on NullPointerExeption
     }
 }

@@ -15,11 +15,11 @@ public class Terrain extends Entity{
     public Terrain(float x, float y, int t) {
         super(x, y, true, false, false, false, Entity.AI.STATIC);
         addSprite(new String[]{"Block"});
-        setTexture(t);
+        setTexture(t, 0);
     }
     
     public Terrain(float x, float y){
-        this(x, y, 0);
+        this(x, y, 1);
     }
     
 }

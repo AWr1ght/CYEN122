@@ -52,13 +52,15 @@ public class World {
                     switch(rgb){
                         case 0x00ff00:      // The Player
                             spawn[0] = i; spawn[1] = j;
-                            add(new Player(i, j, 0));
+                            add(new Player(i, j));
                             break;
                         case 0x0000ff:      // Terrain
                             add(new Terrain(i, j));
                             break;
                         case 0x00ffff:      // Slope Up
-//                            add(new Slope(i, j, new String[]{"Slope"}));
+                            // TODO: Determine if slopes are useful
+                            // may be deprecated out
+//                            add(new Slope(i, j);
                             break;
                         case 0xffff00:
                             add(new LevelEnd(i, j));

@@ -38,6 +38,7 @@ public class Game {
     
     private static Keybinds in = new Keybinds();    
     private static State state = State.MAIN_MENU;
+    private static boolean menuHasRendered;
     protected static Viewport cam;
     protected static Runtime run;
     protected static World world;
@@ -122,7 +123,6 @@ public class Game {
             checkState();
 
             if (DEBUG) {
-                System.out.println("Exited checkState()");
                 if (in.getAttack()) {
                     System.out.println("X Pixel: " + Mouse.getX());
                     System.out.println("#X Tile: " + (int) (Mouse.getX() / 32f + cam.getX()));
@@ -139,26 +139,43 @@ public class Game {
     /**
      * Called on world startup
      */
-    public static void initWorld() {
+    public static void initWorld(String levelName) {
         // TODO: Add String in constructor to create different worlds
-        world = new WorldTest();
+        world = new World(levelName);
         run = new Runtime(world);
+    }
+    
+    /**
+     * Signals to destroy the World during Garbage collection
+     */
+    public static void killWorld(){
+        world = null;
+        run = null;     
     }
     
     public static void setState(State s){
         state = s;
+        menuHasRendered = false;
     }
     
     public static void checkState(){
         switch (state) {
             case MAIN_MENU:
-                System.out.println("PRESS LMB TO PLAY");
+                if(!menuHasRendered) {
+                    System.out.println("PRESS LMB TO PLAY");
+                    menuHasRendered = true;
+                }
                 if(in.getAttack())
                     setState(State.PLAYING);
                 break;
             case PLAYING:
-                if(run == null) initWorld();
+                if(run == null) initWorld("Level1");
                 run.tick();
+                break;
+            case LEVEL_FINISHED:
+                System.out.println("Level finished!");
+                killWorld();
+                setState(State.MAIN_MENU);
                 break;
         }
     }

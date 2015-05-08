@@ -7,6 +7,7 @@
 package cyen122;
 
 import entity.Entity;
+import entity.LevelEnd;
 import entity.Player;
 import java.util.ArrayList;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
@@ -22,12 +23,14 @@ public class Runtime {
     private Viewport cam = Game.cam;
     
     private final World world;
+    private boolean isFinished;
     private Player player;
     private ArrayList<Entity> entities;
     
     public Runtime(World w){
         world = w;
         player = world.getPlayer();
+        isFinished = false;
     }
     
     /**
@@ -46,8 +49,11 @@ public class Runtime {
             // Make the current entity collide iff the entity shouldn't move
             if(curr.getAI() != Entity.AI.STATIC){
                 for(Entity e : world.getNear(curr)){
-                    if(e != null && curr != e){
+                    if(e != null && curr != e){ // vestigial checks
                         ArrayList<Integer> collisions = curr.isColliding(e);
+                        if(e instanceof LevelEnd && collisions.size() > 0){
+                            isFinished = true;
+                        }
                         if(collisions.contains(1)){
                             if(Game.DEBUG) System.out.println("Hit on the Bottom");
                             if(collisions.size() == 1){
@@ -79,6 +85,8 @@ public class Runtime {
                     }
                 }
             }
+            
+            if(isFinished) Game.setState(Game.State.LEVEL_FINISHED);
             
             switch(curr.getAI()){
                 case PLAYER:    // The player

@@ -11,14 +11,14 @@ package entity;
  * @author Allister
  */
 public class Hurdle extends Entity{
-
+    
     public Hurdle(float x, float y, int t) {
         super(x, y, true, false, true, false, Entity.AI.STATIC);
         // TODO: Add textures
     }
     
     public Hurdle(float x, float y){
-        this(x, y, 0);
+        this(x, y, 1);
     }
     
 }

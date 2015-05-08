@@ -18,6 +18,6 @@ public class Shambler extends Entity{
     }
     
     public Shambler(float x, float y){
-        this(x, y, 0);
+        this(x, y, 1);
     }
 }

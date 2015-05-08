@@ -23,6 +23,7 @@ public class Renderer {
      * @param cam the camera to render wrt
      */
     public static void render(Entity e, Viewport cam){
+//        setTexture()
         Texture t = e.getTexture();
         t.bind();
         glBegin(GL_QUADS);

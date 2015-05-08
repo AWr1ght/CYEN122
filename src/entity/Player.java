@@ -14,14 +14,14 @@ public class Player extends Entity{
     private boolean jumping = false;
     private int weapon;     // TODO: Enumerate weapons
     
-    public Player(float x, float y, int textureIndex) {
+    public Player(float x, float y, int t) {
         super(x, y, true, false, false, true, AI.PLAYER);
         addSprite(new String[]{"Slope"});
-        setTexture(textureIndex);
+        setTexture(t, 0);
     }
     
     public Player(float x, float y){
-        this(x, y, 0);
+        this(x, y, 1);
     }
     
     public void setJumping(boolean j){
