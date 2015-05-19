@@ -38,10 +38,10 @@ public class Game {
     
     private static Keybinds in = new Keybinds();    
     private static State state = State.MAIN_MENU;
-    private static boolean menuHasRendered;
+    private static boolean menuCreated;
     protected static Viewport cam;
     protected static Runtime run;
-    protected static World world;
+    protected static World currLevel;
     protected static Menu menu;     // just to keep it from dying
     
     /**
@@ -119,9 +119,12 @@ public class Game {
     public static void gameLoop() {
         while (!Display.isCloseRequested()) {   // While not forced to closed
             glClear(GL_COLOR_BUFFER_BIT);
-            if(Game.DEBUG) System.out.println(state);
             
+            if(Game.DEBUG) System.out.println(state);
             checkState();
+            
+            Display.update();
+            Display.sync(144);
 
             if (DEBUG) {
                 if (in.getAttack()) {
@@ -131,9 +134,6 @@ public class Game {
                     System.out.println("   #Y Tile: " + (int) (Mouse.getY() / 32f + cam.getY()));
                 }
             }
-            
-            Display.update();
-            Display.sync(144);
         }
     }
     
@@ -142,34 +142,62 @@ public class Game {
      */
     public static void initWorld(String levelName) {
         // TODO: Add String in constructor to create different worlds
-        world = new World(levelName);
-        run = new Runtime(world);
+        currLevel = new World(levelName);
+        run = new Runtime(currLevel);
+    }
+    
+    public static void initWorld(World w){
+        currLevel = w;
+        run = new Runtime(currLevel);
     }
     
     /**
      * Signals to destroy the World during Garbage collection
      */
     public static void killWorld(){
-        world = null;
+        currLevel = null;
         run = null;     
     }
     
     public static void setState(State s){
         state = s;
-        menuHasRendered = false;
+        menuCreated = false;
+    }
+    
+    public static void makeMenu(String f, MenuButton[] buttons){
+        menu = new Menu(f, buttons);
+    }
+    
+    public static void breakMenu(){
+        menu = null;
+    }
+    
+    public static void checkSoftButtons(){
+        for (MenuButton button : menu.getButtons()) {
+            if(inRange(Mouse.getX(), button.getX(), button.getX() + button.getWidth()) &&
+               inRange(Mouse.getY(), button.getY(), button.getY() + button.getHeight())){
+                // saw this next line here: http://goo.gl/Z0q4wM
+                if(button.getTarget().getName().equals(World.class.getName())){
+                    makeMenu("six3", new MenuButton[]{});   // splash while loading
+                    initWorld((World) button.isClicked());
+                    setState(State.PLAYING);
+                }
+                breakMenu();
+            }
+        }
     }
     
     public static void checkState(){
         switch (state) {
             case MAIN_MENU:
-                if(!menuHasRendered) {
-                    menu = new Menu("six3", new MenuButton[]{
-                                new MenuButton(0, 0, WIDTH, HEIGHT, World, "Level1")
+                if(!menuCreated) {
+                    makeMenu("Test", new MenuButton[]{
+                               new MenuButton(300, 370, 200, 70, World.class, "Level1")
                                      });
-                    menuHasRendered = true;
+                    menuCreated = true;
                 }
-                if(in.getAttack())
-                    setState(State.PLAYING);
+                menu.render();
+                if(in.getAttack()) checkSoftButtons();
                 break;
             case PLAYING:
                 if(run == null) initWorld("Level1");

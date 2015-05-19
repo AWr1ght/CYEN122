@@ -1,5 +1,5 @@
+package cyen122;
 
-import cyen122.Menu;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,10 +33,14 @@ public class MenuButton {
     public int getHeight() {
         return h;
     }
+    
+    public Class getTarget(){
+        return c;
+    }
 
     protected Object isClicked() {
         try {
-            return c.getConstructor(c).newInstance(arg);
+            return c.getConstructor(String.class).newInstance(arg);
         } catch (Exception ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
             return "Fail";
