@@ -42,6 +42,7 @@ public class Game {
     protected static Viewport cam;
     protected static Runtime run;
     protected static World world;
+    protected static Menu menu;     // just to keep it from dying
     
     /**
      * @param args the command line arguments
@@ -78,7 +79,7 @@ public class Game {
 //            frame.setVisible(true);
             
             Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
-            Display.setTitle("Zombie Run");
+            Display.setTitle("Revenge of The Dead");
             
             Display.create();
             glEnable(GL_TEXTURE_2D);
@@ -162,7 +163,9 @@ public class Game {
         switch (state) {
             case MAIN_MENU:
                 if(!menuHasRendered) {
-                    System.out.println("PRESS LMB TO PLAY");
+                    menu = new Menu("six3", new MenuButton[]{
+                                new MenuButton(0, 0, WIDTH, HEIGHT, World, "Level1")
+                                     });
                     menuHasRendered = true;
                 }
                 if(in.getAttack())
@@ -184,6 +187,7 @@ public class Game {
      * Kills the Display on game exit
      */
     public static void cleanUp() {
+        killWorld();
         Display.destroy();
 //        frame.dispose();
         System.exit(0);

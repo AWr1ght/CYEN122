@@ -176,7 +176,7 @@ public class World {
         System.out.println("Killing entity" + entityIndex);
         // Respawn the player if it gets killed
         if(entities.get(entityIndex) instanceof Player)
-            add(new Player(spawn[0], spawn[1], 0));
+            add(new Player(spawn[0], spawn[1]));
         entities.remove(entityIndex);
     }
 }
