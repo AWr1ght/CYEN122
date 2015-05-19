@@ -12,8 +12,8 @@ package entity;
 public class LevelEnd extends Entity{
     public LevelEnd(float x, float y, int t) {
         super(x, y, true, false, false, false, AI.STATIC);
-        addSprite(new String[]{"Slope"});
-        setTexture(t, 0);
+        addSprite("Slope", 32);
+        setTexture(t, true);
     }
     
     public LevelEnd(float x, float y){

@@ -139,7 +139,9 @@ public class Runtime {
     public void renderWorld(){
         glClear(GL_COLOR_BUFFER_BIT);
         for(Entity e : entities){
-            Renderer.render(e, cam);
+            Renderer.render(e, 
+                    (int) ((System.currentTimeMillis()*e.getFrameCount()/1000)%e.getFrameCount()),
+                    cam);
         }
     }
     

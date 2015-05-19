@@ -16,8 +16,9 @@ public class Player extends Entity{
     
     public Player(float x, float y, int t) {
         super(x, y, true, false, false, true, AI.PLAYER);
-        addSprite(new String[]{"Slope"});
-        setTexture(t, 0);
+        addSprite("Jason", 48);
+        addSprite("Zambs", 64);
+        setTexture(t, false);
     }
     
     public Player(float x, float y){

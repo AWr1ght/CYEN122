@@ -20,23 +20,24 @@ public class Renderer {
     /**
      * Renders a single entity
      * @param e the Entity to render
+     * @param frame the frame to render
      * @param cam the camera to render wrt
      */
-    public static void render(Entity e, Viewport cam){
-//        setTexture()
+    public static void render(Entity e, int frame, Viewport cam){
+        float dx = (float) e.getFrameWidth()/e.getTexture().getTextureWidth();
         Texture t = e.getTexture();
         t.bind();
         glBegin(GL_QUADS);
-            glTexCoord2f(0, 0);
+            glTexCoord2f(frame*dx, 0);
             glVertex2i(toPixels(e.getX() - cam.getX(), "x"),
                        toPixels(e.getY()+e.getHeight()- cam.getY(), "y"));
-            glTexCoord2f(0, 1);
+            glTexCoord2f(frame*dx, 1);
             glVertex2i(toPixels(e.getX()- cam.getX(), "x"),
                        toPixels(e.getY()- cam.getY(), "y"));
-            glTexCoord2f(1, 1);
+            glTexCoord2f(dx*(frame+1), 1);
             glVertex2i(toPixels(e.getX()+e.getWidth()- cam.getX(), "x"),
                        toPixels(e.getY()- cam.getY(), "y"));
-            glTexCoord2f(1, 0);
+            glTexCoord2f(dx*(frame+1), 0);
             glVertex2i(toPixels(e.getX()+e.getWidth()- cam.getX(), "x"),
                        toPixels(e.getY()+e.getHeight()- cam.getY(), "y"));
         glEnd();

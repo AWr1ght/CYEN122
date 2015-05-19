@@ -29,10 +29,11 @@ public abstract class Entity {
 
     private float x, y, w, h, vx, vy, maxLatSpeed;
     private short direction;
+    protected short frameWidth;
     private final boolean isSolid, isDamaging, isSlowing;
     private boolean hasGravity;
-    private String[] sprite;    // animation filenames
-    protected ArrayList<String[]> validDisp;  // For storing valid animations in an entity
+    private String spriteSheet;    // animation filenames
+    protected ArrayList<String> validDisp;  // For storing valid animations in an entity
     
     private Texture texture;    // the currently loaded texture
     private AI ai;
@@ -40,14 +41,14 @@ public abstract class Entity {
     public Entity(float x0, float y0, boolean solid, boolean dmg, 
             boolean slow, boolean grav, AI ai) {
         // Let's just set a default to avoid a NullPointer Exception
-        validDisp = new ArrayList<String[]>();
-        addSprite(new String[]{"Block"});
-        setTexture(0, 0);
+        validDisp = new ArrayList<String>();
+        addSprite("Block", 32);
+        setTexture(0, true);
         
         x = x0;
         y = y0;
-        w = (float) (texture.getImageWidth()/32);
-        h = (float) (texture.getImageHeight()/32);
+        w = (float) (frameWidth/32);
+        h = (float) (texture.getTextureHeight()/32);
         vx = 0;
         vy = 0;
         direction = 0;
@@ -61,7 +62,7 @@ public abstract class Entity {
 
     public Entity(float x0, float y0, float width, float height,
             boolean solid, boolean dmg, boolean slow, boolean grav, AI ai) {
-        validDisp = new ArrayList<String[]>();
+        validDisp = new ArrayList<String>();
         x = x0;
         y = y0;
         w = width;
@@ -117,11 +118,21 @@ public abstract class Entity {
     public Texture getTexture() {
         return texture;
     }
+    
+    public short getFrameWidth(){
+        return frameWidth;
+    }
+    
+    public short getFrameCount(){
+        return (short) (texture.getTextureWidth()/frameWidth);
+    }
 
     public AI getAI() {
         return ai;
     }
 
+    
+    
     public void setX(float x) {
         this.x = x;
     }
@@ -158,12 +169,13 @@ public abstract class Entity {
         hasGravity = grav;
     }
     
-    protected void addSprite(String[] frames){
-        validDisp.add(frames);
+    protected void addSprite(String sheet, int width){
+        validDisp.add(sheet);
+        frameWidth = (short) width;
     }
 
-    public void setTexture(int textureIndex, int frame) {
-        texture = loadTexture(textureIndex, frame);
+    public void setTexture(int textureIndex, boolean isStatic) {
+        texture = loadTexture(textureIndex, isStatic);
     }
 
     public void setAI(AI ai) {
@@ -215,31 +227,31 @@ public abstract class Entity {
      * @param t the filename of the texture to load
      */
 //    private Texture loadTexture(String t){
-    private Texture loadTexture(int textureIndex, int frame) {
+    private Texture loadTexture(int textureIndex, boolean isStatic) {
         if(Game.DEBUG) System.out.println("Loading Texture");
-//        if(isStatic){
+        if(isStatic){
             try{
                 //Source: https://www.youtube.com/watch?v=naE3nbreSUo
                 return TextureLoader.getTexture("PNG", 
                            ResourceLoader.getResourceAsStream(
-                               "res/sprites/static/" + validDisp.get(textureIndex)[frame] + ".png"));
+                               "res/sprites/static/" + validDisp.get(textureIndex) + ".png"));
             } catch(FileNotFoundException e){
                 e.printStackTrace();
             } catch(IOException e){
                 e.printStackTrace();
-            } catch(ArrayIndexOutOfBoundsException e){
-                try{
+            }
+        } else {
+            try{
                 //Source: https://www.youtube.com/watch?v=naE3nbreSUo
                 return TextureLoader.getTexture("PNG", 
                            ResourceLoader.getResourceAsStream(
-                               "res/sprites/static/" + validDisp.get(textureIndex)[
-                                       frame%validDisp.get(textureIndex).length] + ".png"));
-                } catch(FileNotFoundException ex){
-                    e.printStackTrace();
-                } catch(IOException ex){
-                    e.printStackTrace();
-                }
+                               "res/sprites/anim/" + validDisp.get(textureIndex) + ".png"));
+            } catch(FileNotFoundException e){
+                e.printStackTrace();
+            } catch(IOException e){
+                e.printStackTrace();
             }
+        }
         return null;    // Will cause a crash on NullPointerExeption
     }
 }
