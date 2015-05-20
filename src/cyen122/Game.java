@@ -16,6 +16,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.DisplayMode;
+import org.newdawn.slick.openal.AudioLoader;
+import org.newdawn.slick.openal.SoundStore;
+import org.newdawn.slick.util.ResourceLoader;
 
 import world.*;
 
@@ -85,6 +88,7 @@ public class Game {
             if(Game.DEBUG) System.out.println(state);
             checkState();
             
+            SoundStore.get().poll(0);
             Display.update();
             Display.sync(144);
 
@@ -208,7 +212,7 @@ public class Game {
                 killWorld();
                 break;
             case EASTER_EGG:
-                makeMenu("six3", new MenuButton[]{
+                makeMenu("OurSavior", new MenuButton[]{
                              new MenuButton(0, 0, WIDTH, HEIGHT,
                                    StateChanger.class, "MAIN_MENU")
                                });
@@ -239,5 +243,25 @@ public class Game {
      */
     public static boolean inRange(float v, float min, float max) {
         return min <= v && max >= v;
+    }
+    
+    /**
+     * src: http://stackoverflow.com/questions/26305/how-can-i-play-sound-in-java
+     * src2: http://wiki.lwjgl.org/index.php?title=Slick-Util_Library_-_Part_2_-_Loading_Sounds_for_LWJGL
+     * @param f filename
+     */
+    public static void playSound(final String f){
+        if(Game.DEBUG) System.out.println("Make some noize");
+        new Thread(new Runnable(){
+            public void run(){
+                try{
+                    if(Game.DEBUG) System.out.println("Loading Audio");
+                    AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream(
+                            "res/sound/"+f+".wav")).playAsMusic(1, 1, false);
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }

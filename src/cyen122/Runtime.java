@@ -62,6 +62,7 @@ public class Runtime {
                             if(e instanceof BrainCoin){
                                 score += 10;
                                 toKill.add(world.getIDfromInstance(e));
+                                Game.playSound("zombiemoan");
                             }
                             if(e.isLethal())
                                 Game.setState(Game.State.KIA);
@@ -182,6 +183,7 @@ public class Runtime {
         entities = world.getEntities();
         
         if(world.getPlayerID() == -1) Game.setState(Game.State.KIA);
+        Game.playSound("deathsound");
     }
     
     /**
