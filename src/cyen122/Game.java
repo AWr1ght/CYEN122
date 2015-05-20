@@ -30,7 +30,7 @@ public class Game {
     
     // Source: https://www.youtube.com/watch?v=pFUqYPUB_m4
     public static enum State {
-        MAIN_MENU, LEVEL_SELECT, LOADING, PLAYING, LEVEL_FINISHED, CREDITS
+        MAIN_MENU, PLAYING, LEVEL_FINISHED, EASTER_EGG, KIA
     }
     
 //    private static Frame frame;
@@ -192,7 +192,8 @@ public class Game {
             case MAIN_MENU:
                 if(!menuCreated) {
                     makeMenu("Test", new MenuButton[]{
-                               new MenuButton(300, 370, 200, 70, World.class, "Level1")
+                               new MenuButton(300, 370, 200, 70, 
+                                       new String[]{"World", "Level1"})
                                      });
                     menuCreated = true;
                 }
@@ -200,8 +201,14 @@ public class Game {
                 if(in.getAttack()) checkSoftButtons();
                 break;
             case PLAYING:
-                if(run == null) initWorld("Level1");
+                if(run == null) initWorld("Level1");    // a default world to load; vestigial
                 run.tick();
+                break;
+            case KIA:
+                makeMenu("deathscreen", new MenuButton[]{
+                               new MenuButton(0, 0, WIDTH, HEIGHT,
+                                       new String[]{"State", "MAIN_MENU"})
+                                     });
                 break;
             case LEVEL_FINISHED:
                 System.out.println("Level finished!");
