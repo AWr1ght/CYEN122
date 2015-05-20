@@ -30,7 +30,7 @@ public class Game {
     
     // Source: https://www.youtube.com/watch?v=pFUqYPUB_m4
     public static enum State {
-        MAIN_MENU, PLAYING, LEVEL_FINISHED, EASTER_EGG, KIA
+        MAIN_MENU, CHAR_SELECT, PLAYING, LEVEL_FINISHED, EASTER_EGG, KIA
     }
     
 //    private static Frame frame;
@@ -38,7 +38,7 @@ public class Game {
     
     private static Keybinds in = new Keybinds();    
     private static State state = State.MAIN_MENU;
-    private static boolean menuCreated;
+    protected static boolean menuCreated;
     protected static Viewport cam;
     protected static Runtime run;
     protected static World currLevel;
@@ -173,6 +173,7 @@ public class Game {
     }
     
     public static void checkSoftButtons(){
+        if(menu == null) return;
         for (MenuButton button : menu.getButtons()) {
             if(inRange(Mouse.getX(), button.getX(), button.getX() + button.getWidth()) &&
                inRange(Mouse.getY(), button.getY(), button.getY() + button.getHeight())){
@@ -181,6 +182,9 @@ public class Game {
                     makeMenu("six3", new MenuButton[]{});   // splash while loading
                     initWorld((World) button.isClicked());
                     setState(State.PLAYING);
+                }
+                if(button.getTarget().getName().equals(StateChanger.class.getName())){
+                    button.isClicked();
                 }
                 breakMenu();
             }
@@ -192,30 +196,56 @@ public class Game {
             case MAIN_MENU:
                 if(!menuCreated) {
                     makeMenu("Test", new MenuButton[]{
-                               new MenuButton(300, 370, 200, 70, 
-                                       new String[]{"World", "Level1"})
-                                     });
+                               new MenuButton(300, 370, 200, 70,
+                                     StateChanger.class, "CHAR_SELECT")
+                                   });
                     menuCreated = true;
                 }
                 menu.render();
-                if(in.getAttack()) checkSoftButtons();
+                break;
+            case CHAR_SELECT:
+                if(!menuCreated) {
+                    makeMenu("charselect", new MenuButton[]{
+                               new MenuButton(350, 300, 70, 130,
+                                     World.class, "Level1"),
+                               new MenuButton(440, 285, 90, 205,
+                                     World.class, "Level1")
+                                         });
+                    menuCreated = true;
+                }
+                menu.render();
                 break;
             case PLAYING:
                 if(run == null) initWorld("Level1");    // a default world to load; vestigial
+                if(menuCreated) menuCreated = false;
                 run.tick();
                 break;
             case KIA:
-                makeMenu("deathscreen", new MenuButton[]{
-                               new MenuButton(0, 0, WIDTH, HEIGHT,
-                                       new String[]{"State", "MAIN_MENU"})
-                                     });
+                if(!menuCreated) {
+                    makeMenu("deathscreen", new MenuButton[]{
+                                   new MenuButton(0, 0, WIDTH, HEIGHT,
+                                         StateChanger.class, "MAIN_MENU")
+                                          });
+                    menuCreated = true;
+                }
+                menu.render();
                 break;
             case LEVEL_FINISHED:
-                System.out.println("Level finished!");
+                makeMenu("six3", new MenuButton[]{
+                             new MenuButton(0, 0, WIDTH, HEIGHT,
+                                   StateChanger.class, "MAIN_MENU")
+                               });
                 killWorld();
-                setState(State.MAIN_MENU);
+                break;
+            case EASTER_EGG:
+                makeMenu("six3", new MenuButton[]{
+                             new MenuButton(0, 0, WIDTH, HEIGHT,
+                                   StateChanger.class, "MAIN_MENU")
+                               });
+                killWorld();
                 break;
         }
+        if(in.getAttack()) checkSoftButtons();
     }
     
     /**

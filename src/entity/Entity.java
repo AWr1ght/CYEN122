@@ -110,6 +110,10 @@ public abstract class Entity {
     public boolean isSolid(){
         return isSolid;
     }
+    
+    public boolean isLethal(){
+        return isDamaging;
+    }
 
     public boolean hasGravity() {
         return hasGravity;
@@ -194,7 +198,7 @@ public abstract class Entity {
      */
     public ArrayList<Integer> isColliding(Entity e) {
         ArrayList<Integer> collisions = new ArrayList();
-        if (e.isSolid){
+//        if (e.isSolid){
 //            if(Game.DEBUG){
 //                System.out.println("y: " + y);
 //                System.out.println("y+h: " + (y+h));
@@ -217,7 +221,7 @@ public abstract class Entity {
             if(Game.inRange(x, e.x + e.h/2f, e.x + e.h))
                 if (e.x + e.w - x > Math.abs(y - e.y))
                     collisions.add(2);
-        }
+//        }
         return collisions;
     }
 

@@ -2,6 +2,7 @@ package cyen122;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.lwjgl.opengl.Display;
 
 public class MenuButton {
 

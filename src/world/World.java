@@ -57,13 +57,20 @@ public class World {
                         case 0x0000ff:      // Terrain
                             add(new Terrain(i, j));
                             break;
-                        case 0x00ffff:      // Slope Up
-                            // TODO: Determine if slopes are useful
-                            // may be deprecated out
-//                            add(new Slope(i, j);
+                        case 0xff0000:      // Spike
+                            add(new Spike(i, j));
                             break;
-                        case 0xffff00:
+                        case 0xff7f00:      // Human
+                            
+                            break;
+                        case 0x007f00:      // Coin
+                            add(new BrainCoin(i, j));
+                            break;
+                        case 0xffff00:      // End of Level
                             add(new LevelEnd(i, j));
+                            break;
+                        case 0xff00ff:      // Easter Egg Portal
+                            add(new Portal(i, j));
                             break;
                         case 0x7f7f7f:      // Background
                             break;
@@ -106,6 +113,24 @@ public class World {
             }
         }
         return null;
+    }
+    
+    public int getPlayerID(){
+        for(int i = 0; i < entities.size(); i++){
+            if(entities.get(i) instanceof Player){
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+    public int getIDfromInstance(Entity et){
+        for(int i = 0; i < entities.size(); i++){
+            if(et == entities.get(i)){
+                return i;
+            }
+        }
+        return -1;
     }
     
     public ArrayList<Entity> getNear(Entity e){
@@ -175,8 +200,9 @@ public class World {
     public void kill(int entityIndex){
         System.out.println("Killing entity" + entityIndex);
         // Respawn the player if it gets killed
-        if(entities.get(entityIndex) instanceof Player)
-            add(new Player(spawn[0], spawn[1]));
-        entities.remove(entityIndex);
+//        if(entities.get(entityIndex) instanceof Player)
+//            add(new Player(spawn[0], spawn[1]));
+        if(entityIndex >= 0)
+            entities.remove(entityIndex);
     }
 }

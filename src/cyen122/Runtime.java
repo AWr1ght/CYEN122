@@ -6,9 +6,7 @@
 
 package cyen122;
 
-import entity.Entity;
-import entity.LevelEnd;
-import entity.Player;
+import entity.*;
 import java.util.ArrayList;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
@@ -23,18 +21,22 @@ public class Runtime {
     private Viewport cam = Game.cam;
     
     private final World world;
-    private boolean isFinished;
+    private int score;
     private Player player;
     private ArrayList<Entity> entities;
+    private ArrayList<Integer> toKill;
     
     public Runtime(World w){
         world = w;
+        entities = new ArrayList<Entity>();
+        toKill = new ArrayList<Integer>();
+        
         player = world.getPlayer();
-        isFinished = false;
+        score = 0;
     }
     
     /**
-     * Does game ticks on non-static objects (i.e. Player, Shamblers, and Pack)
+     * Does game ticks on non-static objects (i.e. Player, Spikes, Coins, etc.)
      */
     public void tick(){
         if(Game.DEBUG) System.out.println("RUNTIME TICK");
@@ -51,42 +53,54 @@ public class Runtime {
                 for(Entity e : world.getNear(curr)){
                     if(e != null && curr != e){ // vestigial checks
                         ArrayList<Integer> collisions = curr.isColliding(e);
-                        if(e instanceof LevelEnd && collisions.size() > 0){
-                            isFinished = true;
-                        }
-                        if(collisions.contains(1)){
-                            if(Game.DEBUG) System.out.println("Hit on the Bottom");
-                            if(collisions.size() == 1){
-                                if(curr instanceof Player) ((Player) curr).setJumping(false);
-                                curr.setVY(0);                                  // make the entitiy not fall
-                                curr.setVX(curr.getVX() -.3f*curr.getVX());     // create friction
-                                
-                                // Force upward if the tile above e is empty
-                                if(world.getAt(e.getX(), e.getY() + 1) == null && 
-                                   world.getAt(e.getX() + 1, e.getY() + 1) == null)
-                                    curr.setY((int) curr.getY() + 1);
+                        
+                        // specialish cases
+                        if(collisions.size() > 0){
+                            if(e instanceof LevelEnd)
+                                Game.setState(Game.State.LEVEL_FINISHED);
+                            if(e instanceof Portal)
+                                Game.setState(Game.State.EASTER_EGG);
+                            if(e instanceof BrainCoin){
+                                score += 10;
+                                toKill.add(world.getIDfromInstance(e));
                             }
+                            if(e.isLethal())
+                                Game.setState(Game.State.KIA);
                         }
-                        if(collisions.contains(2)){
-                            if(Game.DEBUG) System.out.println("Hit to the Left");
-                            curr.setVX(0);
-                            curr.setX((int) curr.getX() + 1);
-                        } 
-                        if(collisions.contains(3)){
-                            if(Game.DEBUG) System.out.println("Hit to the Right");
-                            curr.setVX(0);
-                            curr.setX((int) curr.getX());
-                        }
-                        if(collisions.contains(4)){
-                            if(Game.DEBUG) System.out.println("Hit to the Top");
-                            curr.setVY(-.1f);   // Becomes spiderman if set to 0
-                            curr.setY((int) curr.getY());
+                        
+                        if(e.isSolid()){
+                            if(collisions.contains(1)){
+                                if(Game.DEBUG) System.out.println("Hit on the Bottom");
+                                if(collisions.size() == 1){
+                                    if(curr instanceof Player) ((Player) curr).setJumping(false);
+                                    curr.setVY(0);                                  // make the entitiy not fall
+                                    curr.setVX(curr.getVX() -.3f*curr.getVX());     // create friction
+                                    
+                                    // Force upward if the tile above e is empty
+                                    if(world.getAt(e.getX(), e.getY() + 1) == null && 
+                                       world.getAt(e.getX() + 1, e.getY() + 1) == null)
+                                        curr.setY((int) curr.getY() + 1);
+                                }
+                            }
+                            if(collisions.contains(2)){
+                                if(Game.DEBUG) System.out.println("Hit to the Left");
+                                curr.setVX(0);
+                                curr.setX((int) curr.getX() + 1);
+                            } 
+                            if(collisions.contains(3)){
+                                if(Game.DEBUG) System.out.println("Hit to the Right");
+                                curr.setVX(0);
+                                curr.setX((int) curr.getX());
+                            }
+                            if(collisions.contains(4)){
+                                if(Game.DEBUG) System.out.println("Hit to the Top");
+                                curr.setVY(-.1f);   // Becomes spiderman if set to 0
+                                curr.setY((int) curr.getY());
+                            }
                         }
                     }
                 }
             }
-            
-            if(isFinished) Game.setState(Game.State.LEVEL_FINISHED);
             
             switch(curr.getAI()){
                 case PLAYER:    // The player
@@ -161,10 +175,14 @@ public class Runtime {
             if(world.getEntity(trimIndex).getY() > world.getHeight())
                 world.kill(trimIndex);
         }
+        for(Object i : toKill.toArray()){
+            world.kill((int) i);
+        }
+        toKill = new ArrayList<Integer>();  // just reset it
+        
         entities = world.getEntities();
         
-        // enabled respawning for testing purposes
-        player = world.getPlayer();
+        if(world.getPlayerID() == -1) Game.setState(Game.State.KIA);
     }
     
     /**
