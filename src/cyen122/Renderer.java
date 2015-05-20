@@ -24,14 +24,14 @@ public class Renderer {
      * @param cam the camera to render wrt
      */
     public static void render(Entity e, int frame, Viewport cam){
-        float dx = (float) e.getFrameWidth()/e.getTexture().getTextureWidth();
         Texture t = e.getTexture();
+        float dx = (float) 1/e.getFrameCount();
         t.bind();
         glBegin(GL_QUADS);
-            glTexCoord2f(frame*dx, 0);
+            glTexCoord2f(dx*frame, 0);
             glVertex2i(toPixels(e.getX() - cam.getX(), "x"),
                        toPixels(e.getY()+e.getHeight()- cam.getY(), "y"));
-            glTexCoord2f(frame*dx, 1);
+            glTexCoord2f(dx*frame, 1);
             glVertex2i(toPixels(e.getX()- cam.getX(), "x"),
                        toPixels(e.getY()- cam.getY(), "y"));
             glTexCoord2f(dx*(frame+1), 1);

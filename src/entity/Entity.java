@@ -27,7 +27,7 @@ public abstract class Entity {
     
     private static final float DEFAULT_MAX_SPEED = .2f;
 
-    private float x, y, w, h, vx, vy, maxLatSpeed;
+    private float x, y, w, h, scale, vx, vy, maxLatSpeed;
     private short direction;
     protected short frameWidth;
     private final boolean isSolid, isDamaging, isSlowing;
@@ -43,12 +43,12 @@ public abstract class Entity {
         // Let's just set a default to avoid a NullPointer Exception
         validDisp = new ArrayList<String>();
         addSprite("Block", 32);
-        setTexture(0, true);
+        setTexture(0, true, 1);    // block unless othewise specified
         
         x = x0;
         y = y0;
-        w = (float) (frameWidth/32);
-        h = (float) (texture.getTextureHeight()/32);
+        w = (float) frameWidth/32;
+        h = (float) texture.getTextureHeight()/32;
         vx = 0;
         vy = 0;
         direction = 0;
@@ -88,11 +88,11 @@ public abstract class Entity {
     }
 
     public float getWidth() {
-        return w;
+        return (float) frameWidth/32*scale;
     }
 
     public float getHeight() {
-        return h;
+        return (float) texture.getTextureHeight()/32*scale;
     }
 
     public float getVX() {
@@ -178,8 +178,9 @@ public abstract class Entity {
         frameWidth = (short) width;
     }
 
-    public void setTexture(int textureIndex, boolean isStatic) {
+    public void setTexture(int textureIndex, boolean isStatic, float scale) {
         texture = loadTexture(textureIndex, isStatic);
+        this.scale = (scale > 0) ? scale : (float) 32/texture.getImageHeight();
     }
 
     public void setAI(AI ai) {

@@ -13,7 +13,7 @@ public class LevelEnd extends Entity{
     public LevelEnd(float x, float y, int t) {
         super(x, y, true, false, false, false, AI.STATIC);
         addSprite("Slope", 32);
-        setTexture(t, true);
+        setTexture(t, true, 1);
     }
     
     public LevelEnd(float x, float y){

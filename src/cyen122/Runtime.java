@@ -39,7 +39,6 @@ public class Runtime {
      * Does game ticks on non-static objects (i.e. Player, Spikes, Coins, etc.)
      */
     public void tick(){
-        if(Game.DEBUG) System.out.println("RUNTIME TICK");
         entities = world.getEntities();
         trim();
         tickInput();

@@ -15,7 +15,7 @@ public class Terrain extends Entity{
     public Terrain(float x, float y, int t) {
         super(x, y, true, false, false, false, Entity.AI.STATIC);
         addSprite("Block", 32);
-        setTexture(t, true);
+        setTexture(t, true, 1);
     }
     
     public Terrain(float x, float y){

@@ -14,6 +14,6 @@ public class BrainCoin extends Entity{
     public BrainCoin(float x0, float y0) {
         super(x0, y0, false, false, false, false, Entity.AI.STATIC);
         addSprite("braincoin", 236);
-        setTexture(1, true);
+        setTexture(1, true, .1356f);
     }
 }

@@ -6,6 +6,7 @@
 package cyen122;
 
 import static cyen122.Game.cam;
+import entity.Player;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -57,26 +58,7 @@ public class Game {
      * Called on Game startup - creates windows and layout
      */
     public static void initApp() {
-        /* Sources:
-                forum.lwjgl.org/index.php?topic=4275.0
-                http://wiki.lwjgl.org/index.php?title=Using_a_Resizeable_AWT_Frame_with_LWJGL
-        */
-//        frame = new Frame("Zombie Run");
-//        frame.setLayout(new BorderLayout());
-//        frame.add(canvas, BorderLayout.CENTER);
-        
         try {
-//            Display.setParent(canvas);
-//            canvas.setSize(WIDTH, HEIGHT);
-//            canvas.requestFocus();
-//            frame.setResizable(false);
-//            frame.pack();
-            
-            // Source: Dr. Gourd's Simple Sample Game
-//            frame.setLocation(
-//                    (Toolkit.getDefaultToolkit().getScreenSize().width - frame.getWidth())/2,
-//                    (Toolkit.getDefaultToolkit().getScreenSize().height - frame.getHeight())/2);
-//            frame.setVisible(true);
             
             Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
             Display.setTitle("Revenge of The Dead");
@@ -91,26 +73,6 @@ public class Game {
         } catch (LWJGLException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-//        addListeners();
-    }
-    
-    private static void addListeners(){
-//        // Source: http://stackoverflow.com/questions/9093448/do-something-when-the-close-button-is-clicked-on-a-jframe
-//        frame.addWindowListener(new WindowAdapter(){
-//            @Override
-//            public void windowClosing(WindowEvent e){
-//                System.exit(0);
-//            }
-//        });
-//        
-//        canvas.addMouseListener(new MouseAdapter(){
-//            @Override
-//            public void mouseReleased(MouseEvent e){
-//                System.out.println("Mouse Pressed!");
-//                setState(State.PLAYING);
-//            }
-//        });
     }
     
     /**
@@ -139,11 +101,20 @@ public class Game {
     
     /**
      * Called on world startup
+     * @param levelName
      */
     public static void initWorld(String levelName) {
         // TODO: Add String in constructor to create different worlds
         currLevel = new World(levelName);
         run = new Runtime(currLevel);
+    }
+    
+    /**
+     * Cohesion-reducing spaghetti workaround
+     * @return 
+     */
+    public static Player getPlayer(){
+        return currLevel.getPlayer();
     }
     
     public static void initWorld(World w){
@@ -182,11 +153,10 @@ public class Game {
                     makeMenu("six3", new MenuButton[]{});   // splash while loading
                     initWorld((World) button.isClicked());
                     setState(State.PLAYING);
-                }
-                if(button.getTarget().getName().equals(StateChanger.class.getName())){
+                } else {
                     button.isClicked();
                 }
-                breakMenu();
+//                breakMenu();
             }
         }
     }
@@ -207,9 +177,9 @@ public class Game {
                 if(!menuCreated) {
                     makeMenu("charselect", new MenuButton[]{
                                new MenuButton(350, 300, 70, 130,
-                                     World.class, "Level1"),
+                                     SkinChanger.class, "2"),
                                new MenuButton(440, 285, 90, 205,
-                                     World.class, "Level1")
+                                     SkinChanger.class, "1")
                                          });
                     menuCreated = true;
                 }

@@ -41,10 +41,6 @@ public class World {
             for(int i = 0; i < level.getWidth(); i++){
                 for(int j = 0; j < level.getHeight(); j++){
                     // Source : http://stackoverflow.com/questions/25761438/understanding-bufferedimage-getrgb-output-values
-//                    if(Game.DEBUG){
-//                        System.out.println("Getting color at " 
-//                                    + i + ", " + (level.getHeight() - j - 1));
-//                    }
                     Color c = new Color(level.getRGB(i, (level.getHeight() - j - 1)));
                     int rgb = 0x010000*c.getRed()
                              + 0x000100*c.getGreen()

@@ -15,7 +15,7 @@ public class Spike extends Entity{
     public Spike(float x, float y, int t) {
         super(x, y, true, true, false, false, Entity.AI.STATIC);
         addSprite("dangerous-spike", 200);
-        setTexture(t, true);
+        setTexture(t, true, .16f);
     }
     
     public Spike(float x, float y){

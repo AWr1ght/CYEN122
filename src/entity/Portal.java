@@ -14,7 +14,7 @@ public class Portal extends Entity{
     public Portal(float x0, float y0) {
         super(x0, y0, true, false, true, false, Entity.AI.STATIC);
         addSprite("easter-egg-portal", 188);
-        setTexture(1, true);
+        setTexture(1, true, .3404f);
     }
     
 }
